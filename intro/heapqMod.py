@@ -22,8 +22,5 @@ def fnHeapq():
   # print(heapq.heappop(idades))
 
   # add value on list heap
-  heapq.heappush(idades, 3)
+  # heapq.heappush(idades, 3)
   print(idades)
-
-
-fnHeapq()
