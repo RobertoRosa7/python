@@ -21,5 +21,9 @@ def fnHeapq():
   # remover o menor valor da lista heap
   # print(heapq.heappop(idades))
 
+  # add value on list heap
+  heapq.heappush(idades, 3)
+  print(idades)
+
 
 fnHeapq()
