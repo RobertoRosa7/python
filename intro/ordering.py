@@ -25,3 +25,4 @@ pessoas = [p1, p2, p3, p4]
 
 # print(sorted(pessoas)) # error - falta critério de orndenação
 print(sorted(pessoas, key = byAge))
+print(sorted(pessoas, key = byAge, reverse=True))
