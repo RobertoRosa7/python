@@ -20,7 +20,45 @@ from math import sqrt
 
     modelo de tuplo: tup = (('a', 1), ('b', 2), ('c', 3))
 """
+def enum():
+    '''
+        Model simples de enumeração: realiza uma associação com os índices de um array com
+        os seus respectivos valores.
+    '''
+    list = ['a', 2, 'b', 3, 'c', 4, 'd']
+    for i, value in enumerate(list):
+        print(i, value)
 
+def npv():
+    '''
+        valor investido R$ 100,00 hoje, e R$30,00 no próximo ano, a inflação de 3.5% será de
+        R$10,00, R$40,00, R$50,00, R$45,00 e R$20,00 no final de cada ano nos próximos cinco anos,
+        com início no segundo ano
+    '''
+    rate = 0.035
+    cashflows = [-100, -30, 10, 40, 50, 45, 20]
+
+    total = 0.0
+    # sem enumerate
+    # for i in range(0, len(cashflows)):
+    #     total += cashflows[i] / (1 + rate) ** i
+
+    # com enumerate
+    for i, cashflow in enumerate(cashflows):
+        total += cashflow / (1 + rate) ** (i + 1)
+    print(total)
+
+npv()
+def fv_f():
+    '''
+        Calcular o valor futuro:
+        deposito de R$ 100,00 hoje, com taxa de 1.5% ao ano, período de três anos
+        qual será seu valor?
+    '''
+    pv = 100
+    r = 0.015
+    n = 3
+    return pv*(1+r)**n
 
 def fibonacci(n):
     '''
@@ -69,7 +107,6 @@ def isPrimo(n):
     #     return False
     # return True
     return False if aux > 2 else True
-print(isPrimo(1))
 
 def maiorOuMenorIdade():
     """
