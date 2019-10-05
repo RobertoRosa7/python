@@ -19,13 +19,20 @@ pessoas = {
     'altura': 1.75,
     'peso': 65.3
 }
+def implementsTuplas():
+    '''
+        Implementando tuplas com a função zip - combinação de elementos de tuplas 
+    '''
+    # junção do primeiro indice o array1 com o primeiro indice do array2
+    result = zip([1,2,3], [4,5,6])
+    print(list(result))
+implementsTuplas()
 def concatList():
     # ajuntar duas ou mais lista
     comb = itertools.chain(strings, numbers, mix)
 
     print(list(comb))
     
-concatList()
 def useGet():
     '''
         Trabalhando com método get em listas
