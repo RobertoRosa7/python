@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import itertools
 from itertools import permutations
 from itertools import combinations
 
-def itertool():
+def intertool():
     '''
         Permutations retorna todas as combinações possíveis de uma lista
     '''
@@ -17,7 +18,11 @@ def itertool():
     # for l in permutations(list):
         # print(l)
 
-    for c in combinations(list, 2):
-        print(c)
+    # for c in combinations(list, 2):
+    #     print(c)
 
-# itertool()
+    # vinculando indices das lista
+    for p in itertools.product([1,2,3,4], [5,6]):
+        print(p)
+
+intertool()
