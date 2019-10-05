@@ -19,6 +19,24 @@ pessoas = {
     'altura': 1.75,
     'peso': 65.3
 }
+def calcWidthDict():
+    '''
+        Calculos com dicionários
+    '''
+    products = {
+        'Tablet':2000,
+        'Notebook':5000,
+        'Desktop':1599,
+        'Mouse':98.98,
+        'Cabo USB':18.50,
+        'Monitor':599
+    }
+    # filtro pelo menor preço
+    minPrice = min(zip(products.values(), products.keys()))
+    maxPrice = max(zip(products.values(), products.keys()))
+    print('Maior preço', maxPrice)
+    print('Menor preço', minPrice)
+
 def implementsTuplas():
     '''
         Implementando tuplas com a função zip - combinação de elementos de tuplas 
@@ -159,6 +177,7 @@ def tuplas():
     # adicionando contador a tupla
     for count, elem in enumerate(tupla):
         print('%d %d' % (count, elem))
+
 def dict():
     # saber os valores através das chaves
     # print(pessoas['nome'])
