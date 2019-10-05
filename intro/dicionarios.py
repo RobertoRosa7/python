@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 import itertools
-from collections import defaultdict
-from collections import OrderedDict
+from collections import defaultdict, OrderedDict, Counter
 
 """
     Trabalhando com dicionários
@@ -11,14 +10,19 @@ from collections import OrderedDict
 strings = ['América', 'Brasil', 'Japão', 'Australia', 'Holanda', 'Londres']
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 mix = ['Brasil', 2, 30.5, True, 'Estados Unidos', False, 5.2, 'Brasil']
+people = {'nome':'Roberto','idade': 32,'cidade': 'Osasco','altura': 1.75,'peso': 65.3}
+names = ['Roberto','Maria','Camila','Sandra','Rose','Roberto','Maria','Elizabete','Monica','Pedro','Thales','Leonardo','Rose','Maria','Fernanda','Bruna','Jose','Monica','Beatriz','Gabriela','Juliana','Sonia','Fernanda','Rose','Roberto','Maria','Sandra','Gustavo']
 
-pessoas = {
-    'nome':'Roberto',
-    'idade': 32,
-    'cidade': 'Osasco',
-    'altura': 1.75,
-    'peso': 65.3
-}
+def counterWords():
+    '''
+        Usando a classe Counter para contar a quantidade de ocorrências
+
+    '''
+    count = Counter(names) # contar todas os nomes
+
+    print(count.most_common(3)) # os dois nomes com maior ocorrência
+
+
 def calcWidthDict():
     '''
         Calculos com dicionários
@@ -39,10 +43,9 @@ def calcWidthDict():
 
     # print(products.keys()) # listar todas as chaves ou propriedades
     # print(products.values()) # listar todos os valores
-    print(products.keys() & pessoas.keys()) # todas as chaves em comuns
-    print(products.keys() - pessoas.keys()) # todas as chaves que estão em
+    print(products.keys() & people.keys()) # todas as chaves em comuns
+    print(products.keys() - people.keys()) # todas as chaves que estão em
 
-calcWidthDict()
 def implementsTuplas():
     '''
         Implementando tuplas com a função zip - combinação de elementos de tuplas 
@@ -62,9 +65,9 @@ def useGet():
         Trabalhando com método get em listas
     '''
     # imprime o valor da propriedade nome
-    # print(pessoas['nome'])
+    # print(people['nome'])
 
-    if pessoas.get('nome'):
+    if people.get('nome'):
         print('propriedade existente\n')
     else:
         print('propriedade inexistente\n')
@@ -186,19 +189,19 @@ def tuplas():
 
 def dict():
     # saber os valores através das chaves
-    # print(pessoas['nome'])
+    # print(people['nome'])
 
     # capturar as chaves
-    # print(pessoas.keys())
+    # print(people.keys())
 
     # remover um elemento do objeto
-    # del pessoas['nome']
+    # del people['nome']
 
     # procurar por valores no objeto
-    # print('Roberto' in pessoas)
+    # print('Roberto' in people)
 
     # capturar os valores do dict
-    print(pessoas.values())
+    print(people.values())
 
 def dictMultiValue():
   '''
