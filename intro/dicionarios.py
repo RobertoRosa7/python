@@ -32,24 +32,30 @@ def calcWidthDict():
         'Monitor':599
     }
     # filtro pelo menor preço
-    minPrice = min(zip(products.values(), products.keys()))
-    maxPrice = max(zip(products.values(), products.keys()))
-    print('Maior preço', maxPrice)
-    print('Menor preço', minPrice)
+    # minPrice = min(zip(products.values(), products.keys()))
+    # maxPrice = max(zip(products.values(), products.keys()))
+    # print('Maior preço', maxPrice)
+    # print('Menor preço', minPrice)
 
+    # print(products.keys()) # listar todas as chaves ou propriedades
+    # print(products.values()) # listar todos os valores
+    print(products.keys() & pessoas.keys()) # todas as chaves em comuns
+    print(products.keys() - pessoas.keys()) # todas as chaves que estão em
+
+calcWidthDict()
 def implementsTuplas():
     '''
         Implementando tuplas com a função zip - combinação de elementos de tuplas 
     '''
     # junção do primeiro indice o array1 com o primeiro indice do array2
-    result = zip([1,2,3], [4,5,6])
-    print(list(result))
+    # result = zip([1,2,3], [4,5,6])
+    # print(list(result))
 
 def concatList():
     # ajuntar duas ou mais lista
     comb = itertools.chain(strings, numbers, mix)
 
-    print(list(comb))
+    print(comb)
     
 def useGet():
     '''
