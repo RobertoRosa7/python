@@ -26,7 +26,7 @@ def implementsTuplas():
     # junção do primeiro indice o array1 com o primeiro indice do array2
     result = zip([1,2,3], [4,5,6])
     print(list(result))
-implementsTuplas()
+
 def concatList():
     # ajuntar duas ou mais lista
     comb = itertools.chain(strings, numbers, mix)
@@ -152,12 +152,13 @@ def list():
 
 def tuplas():
     '''
-        Estrutura de dados que não permite alteração após sua declaração
+        Estrutura de dados que NÃO permite alteração após sua declaração
     '''
     tupla = (1,2,3,4,5)
 
-    print(tupla)
-
+    # adicionando contador a tupla
+    for count, elem in enumerate(tupla):
+        print('%d %d' % (count, elem))
 def dict():
     # saber os valores através das chaves
     # print(pessoas['nome'])
