@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
+from collections import OrderedDict
 
 def dictMultiValue():
   '''
@@ -27,4 +28,22 @@ def dictMultiValue():
 
   print(l['marcos'])
 
-dictMultiValue()
+def orderedDict():
+  '''
+    Ordenação de dicionários multiplus valores
+  '''
+  order = OrderedDict()
+
+  order['Python'] = 10
+  order['CSS'] = 3
+  order['HTML'] = 5
+  order['JavaScript'] = 8
+  order['Angular'] = 9
+  order['MongoDB'] = 2
+  order['Vscode'] = 7
+
+  # loop for list ordering
+  for i in order:
+    print(i, order[i])
+
+orderedDict()
