@@ -21,8 +21,8 @@ def intertool():
     # for c in combinations(list, 2):
     #     print(c)
 
-    # vinculando indices das lista
-    for p in itertools.product([1,2,3,4], [5,6]):
-        print(p)
+    # vinculando indices das lista com produtos cartesianos
+    # for p in itertools.product([1,2,3,4], [5,6]):
+    #     print(p)
 
 intertool()
