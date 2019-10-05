@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
+from collections import defaultdict
+from collections import OrderedDict
 
 """
     Trabalhando com dicionários
@@ -16,17 +18,19 @@ pessoas = {
     'altura': 1.75,
     'peso': 65.3
 }
+
 def filterList():
     '''
         Criando uma lista somente com indice pares:
     '''
+    
     # filtro de pares
     par = [x for x in range(11) if x % 2 == 0]
 
     # exponenciação
     exp = [x ** 2 for x in range(1, 11)]
-    print(exp)
-filterList()
+    print(exp, par)
+
 def intro():
     # caputrando o indice de strings
     # print(mix[3])
@@ -68,7 +72,7 @@ def intro():
     """
 
     dictSites = {"Diego": "diegomariano.com","Google":"google.com","Udemy": "udemy.com"}
-    # print(dictSites['Udemy'])
+    print(dictSites['Udemy'])
 
 
     """
@@ -79,7 +83,7 @@ def intro():
     """
     # numAle = random.randint(0,10) # entre 0 até 10 inteiro
     numAle = random.choice(numbers)
-    # print(numAle)
+    print(numAle)
 
 
     """
@@ -126,6 +130,8 @@ def tuplas():
     '''
     tupla = (1,2,3,4,5)
 
+    print(tupla)
+
 def dict():
     # saber os valores através das chaves
     # print(pessoas['nome'])
@@ -141,3 +147,47 @@ def dict():
 
     # capturar os valores do dict
     print(pessoas.values())
+
+def dictMultiValue():
+  '''
+    Dicionário de multiplus valores - uma lista de objetos, lembrando que lista são um conjunto
+    de chaves com valores únicos
+  '''
+  # não elimina repetição e precisa usar append()
+  d = defaultdict(list)
+
+  d['marcos'].append(10)
+  d['marcos'].append(20)
+  d['marcos'].append(30)
+  d['marcos'].append(40)
+
+  d['roberto'].append('idade')
+  d['roberto'].append(30)
+  d['roberto'].append(40)
+
+  # elimina repetição e precisa usar add
+  l = defaultdict(set)
+  l['marcos'].add(10)
+  l['marcos'].add(10)
+  l['marcos'].add(10)
+  l['marcos'].add(20)
+
+  print(l['marcos'])
+
+def orderedDict():
+  '''
+    Ordenação de dicionários multiplus valores
+  '''
+  order = OrderedDict()
+
+  order['Python'] = 10
+  order['CSS'] = 3
+  order['HTML'] = 5
+  order['JavaScript'] = 8
+  order['Angular'] = 9
+  order['MongoDB'] = 2
+  order['Vscode'] = 7
+
+  # loop for list ordering
+  for i in order:
+    print(i, order[i])
