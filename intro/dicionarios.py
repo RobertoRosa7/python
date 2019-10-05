@@ -19,6 +19,19 @@ pessoas = {
     'peso': 65.3
 }
 
+def useGet():
+    '''
+        Trabalhando com método get em listas
+    '''
+    # imprime o valor da propriedade nome
+    # print(pessoas['nome'])
+
+    if pessoas.get('nome'):
+        print('propriedade existente\n')
+    else:
+        print('propriedade inexistente\n')
+
+useGet()
 def filterList():
     '''
         Criando uma lista somente com indice pares:
