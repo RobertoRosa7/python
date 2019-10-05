@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
+import itertools
 from collections import defaultdict
 from collections import OrderedDict
 
@@ -18,7 +19,13 @@ pessoas = {
     'altura': 1.75,
     'peso': 65.3
 }
+def concatList():
+    # ajuntar duas ou mais lista
+    comb = itertools.chain(strings, numbers, mix)
 
+    print(list(comb))
+    
+concatList()
 def useGet():
     '''
         Trabalhando com método get em listas
@@ -31,7 +38,6 @@ def useGet():
     else:
         print('propriedade inexistente\n')
 
-useGet()
 def filterList():
     '''
         Criando uma lista somente com indice pares:
