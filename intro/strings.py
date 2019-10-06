@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from fnmatch import fnmatch, fnmatchcase
 import re
+
 def findMatch():
   '''
     Muito utilizado para URL's isso indica uma exata correspondência de caracteres
@@ -23,25 +24,36 @@ def findMatch():
   # find all occurrence
   texto = 'blablablabla, 11/12/2019, blablablablablabla, 01/01/2020'
   print(defaultPattern.findall(texto))
-findMatch()
+
 def strings():
     '''
         Manipulação de strings
     '''
+    # substituir uma palavra da string
+    texto = 'eu amo estudar javascript, mas no meu tempo livre estudo python'
+    print(texto.replace('javascript', 'php'))
+
+    texto02 = 'eu nasci na data de 26/02/1987 e minha irmã nasceu em 10/12/1980'
+    print(re.sub(r'(\d+)/(\d+)/(\d+)', r'\3-\1-\2', texto02))
+
+    texto03 = 'eu nasci em 1987-02-26'
+    print(re.sub(r'(\d+)-(\d+)-(\d+)', r'\3/\2/\1', texto03))
+
     # acessar cada caracter
     # nome = 'roberto'
 
     # substituir algum caracter por outro
-    nome = 'roberto'
-    lista = list(nome) # necessário para substituíção 
-    lista[0] = 't'
-    nome = ''.join(lista)
+    # nome = 'roberto'
+    # lista = list(nome) # necessário para substituíção 
+    # lista[0] = 't'
+    # nome = ''.join(lista)
 
     # para saber o final de uma string | .txt | .png | .pdf | .zip etc...
-    file = 'arquivo.txt'
+    # file = 'arquivo.txt'
     # print(file.endswith('.txt')) # return boolean
-    print(file.startswith('arq')) # return boolean
+    # print(file.startswith('arq')) # return boolean
 
+strings()
 def stringImutaveis():
   '''
     Strings in python são imutáveis por não poder receber atribuição de novos valores em suas
