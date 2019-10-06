@@ -1,24 +1,25 @@
 # -*- coding: utf-8 -*-
+"""
+    Trabalhando com dicionários
+"""
 import random
 import itertools
 from collections import defaultdict, OrderedDict, Counter
 from operator import itemgetter
-from databases import database, mix, strings, names, numbers, people, sequence
+from databases import database, mix, strings, names, numbers, people, sequence, products
 
-"""
-    Trabalhando com dicionários
-"""
-
-
+def extractingValuesFromDict():
+    moreThanHundred = {key: value for key, value in products.items() if value > 100}
+    lessThanFifty = {key: value for key, value in products.items() if value < 50}
+    print('maior que R$ 100,00', moreThanHundred)
+    print('menor que R$ 50,00', lessThanFifty)
 def counterWords():
     '''
         Usando a classe Counter para contar a quantidade de ocorrências
-
     '''
     count = Counter(names) # contar todas os nomes
 
     print(count.most_common(3)) # os dois nomes com maior ocorrência
-
 
 def calcWidthDict():
     '''
@@ -146,7 +147,6 @@ def intro():
         print(a / b)
     except:
         print('Não é possível dividir', a, 'por', b)
-
 
 def list():
     # somente valores positivos de uma lista com valores mistos

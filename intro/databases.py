@@ -5,6 +5,7 @@ sequence = [10,-4,100,-3.55,0.004,-0.015,23,-12,-500,234,24,3421,-234,0.2,0.4,0.
 mix = ['Brasil', 2, 30.5, True, 'Estados Unidos', False, 5.2, 'Brasil']
 people = {'nome':'Roberto','idade': 32,'cidade': 'Osasco','altura': 1.75,'peso': 65.3}
 names = ['Roberto','Maria','Camila','Sandra','Rose','Roberto','Maria','Elizabete','Monica','Pedro','Thales','Leonardo','Rose','Maria','Fernanda','Bruna','Jose','Monica','Beatriz','Gabriela','Juliana','Sonia','Fernanda','Rose','Roberto','Maria','Sandra','Gustavo']
+products = {'notebook':5999, 'smartphone':1999,'desktop':2000,'setphone':59,'phone':199,'monitor':215,'mouse':29,'pendrive':189,'hard disk':459,'usb cable':129}
 database = [
     {'name':'Roberto','age':32,'city':'Osasco','height':1.75,'weight':65.3},
     {'name':'Sandra','age':22,'city':'São Paulo','height':1.54,'weight':45.3},

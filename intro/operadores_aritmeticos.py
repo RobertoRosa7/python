@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 import math
 # import module # importação normal
-from module import * # importação total não precisar usar module.fn
+# from module import * # importação total não precisar usar module.fn
+from databases import sequence
 
+def rootSquare():
+    # root square for number more than 3 - method comprehention
+    print([math.sqrt(i) for i in sequence if i >= 5])
+
+rootSquare()
 def mathsOperations():
     """
         Operações matemática
@@ -58,4 +64,3 @@ def mathsOperations():
 
 # executando funções do módulo aqui neste script
 # print(module.media(10, 20))
-print(media(6, 2))
