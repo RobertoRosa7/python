@@ -13,6 +13,7 @@ def extractingValuesFromDict():
     lessThanFifty = {key: value for key, value in products.items() if value < 50}
     print('maior que R$ 100,00', moreThanHundred)
     print('menor que R$ 50,00', lessThanFifty)
+
 def counterWords():
     '''
         Usando a classe Counter para contar a quantidade de ocorrências
@@ -149,6 +150,10 @@ def intro():
         print('Não é possível dividir', a, 'por', b)
 
 def list():
+    # percorrer uma lista de modo inverso
+    # for i in reversed(sequence):
+    #     print(i)
+    
     # somente valores positivos de uma lista com valores mistos
     # print([i for i in sequence if i > 0])
 
@@ -159,9 +164,11 @@ def list():
     # numNative = (i for i in sequence if i < 0)
     # for a in numNative:
     #     print(a)
-    numPositive = (i for i in sequence if i > 0)
-    for a in numPositive:
-        print(a)
+
+    # numPositive = (i for i in sequence if i > 0)
+    # for a in numPositive:
+    #     print(a)
+
     # caputrar o último elemento da lista
     # print(mix[-1])
 
@@ -193,6 +200,7 @@ def list():
     # print(orderByName)
     # print(orderByAge)
 
+list()
 def tuplas():
     '''
         Estrutura de dados que NÃO permite alteração após sua declaração
