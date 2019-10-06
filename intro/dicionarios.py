@@ -3,7 +3,7 @@ import random
 import itertools
 from collections import defaultdict, OrderedDict, Counter
 from operator import itemgetter
-from databases import database, mix, strings, names, numbers, people
+from databases import database, mix, strings, names, numbers, people, sequence
 
 """
     Trabalhando com dicionários
@@ -149,6 +149,19 @@ def intro():
 
 
 def list():
+    # somente valores positivos de uma lista com valores mistos
+    # print([i for i in sequence if i > 0])
+
+    # somente os valroes negativos
+    # print([i for i in sequence if i < 0]) # list comprehentions
+
+    # list generator
+    # numNative = (i for i in sequence if i < 0)
+    # for a in numNative:
+    #     print(a)
+    numPositive = (i for i in sequence if i > 0)
+    for a in numPositive:
+        print(a)
     # caputrar o último elemento da lista
     # print(mix[-1])
 
@@ -175,12 +188,11 @@ def list():
     # print(mix.count('Brasil'))
 
     # ordenação de lista do dicionarios
-    orderByName = sorted(database, key=itemgetter('name'))
-    orderByAge = sorted(database, key=itemgetter('age'))
-    print(orderByName)
-    print(orderByAge)
+    # orderByName = sorted(database, key=itemgetter('name'))
+    # orderByAge = sorted(database, key=itemgetter('age'))
+    # print(orderByName)
+    # print(orderByAge)
 
-list()
 def tuplas():
     '''
         Estrutura de dados que NÃO permite alteração após sua declaração

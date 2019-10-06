@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 strings = ['América', 'Brasil', 'Japão', 'Australia', 'Holanda', 'Londres']
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+sequence = [10,-4,100,-3.55,0.004,-0.015,23,-12,-500,234,24,3421,-234,0.2,0.4,0.55]
 mix = ['Brasil', 2, 30.5, True, 'Estados Unidos', False, 5.2, 'Brasil']
 people = {'nome':'Roberto','idade': 32,'cidade': 'Osasco','altura': 1.75,'peso': 65.3}
 names = ['Roberto','Maria','Camila','Sandra','Rose','Roberto','Maria','Elizabete','Monica','Pedro','Thales','Leonardo','Rose','Maria','Fernanda','Bruna','Jose','Monica','Beatriz','Gabriela','Juliana','Sonia','Fernanda','Rose','Roberto','Maria','Sandra','Gustavo']
