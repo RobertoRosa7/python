@@ -4,7 +4,21 @@ from itertools import permutations
 from itertools import combinations
 from itertools import groupby
 from operator import itemgetter
+from databases import database
 
+def createGroupByDate():
+    '''
+        Criando groupos e ordenando pela data
+    '''
+    # ordem by age
+    database.sort(key=itemgetter('age'))
+
+    # create groups
+    for age, items in groupby(database, key=itemgetter('age')):
+        print('idade', age)
+        for i in items:
+            print(' ', i)
+createGroupByDate()
 def groupObject():
     '''
         Agrupamento de elementos
@@ -27,7 +41,7 @@ def groupObject():
     # criando um json com itens agrupados
     json = {key: sorted(map(itemgetter(1), value)) for key, value in groupby(ex, key=itemgetter(0))}
     print(json)
-groupObject()
+
 def intertool():
     '''
         Permutations retorna todas as combinações possíveis de uma lista
