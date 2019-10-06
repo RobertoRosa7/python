@@ -35,6 +35,7 @@ def strings():
 
     texto02 = 'eu nasci na data de 26/02/1987 e minha irmã nasceu em 10/12/1980'
     print(re.sub(r'(\d+)/(\d+)/(\d+)', r'\3-\1-\2', texto02))
+    print(re.sub(r'(\d+)/(\d+)/(\d+)', r'\3-\1-\2', texto02, flags=re.IGNORECASE)) # ignorar case sensitive
 
     texto03 = 'eu nasci em 1987-02-26'
     print(re.sub(r'(\d+)-(\d+)-(\d+)', r'\3/\2/\1', texto03))
