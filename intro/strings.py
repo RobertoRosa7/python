@@ -33,6 +33,7 @@ def strings():
     texto = 'eu amo estudar javascript, mas no meu tempo livre estudo python'
     print(texto.replace('javascript', 'php'))
 
+    # substituir um padrão dentro da string
     texto02 = 'eu nasci na data de 26/02/1987 e minha irmã nasceu em 10/12/1980'
     print(re.sub(r'(\d+)/(\d+)/(\d+)', r'\3-\1-\2', texto02))
     print(re.sub(r'(\d+)/(\d+)/(\d+)', r'\3-\1-\2', texto02, flags=re.IGNORECASE)) # ignorar case sensitive
@@ -40,6 +41,21 @@ def strings():
     texto03 = 'eu nasci em 1987-02-26'
     print(re.sub(r'(\d+)-(\d+)-(\d+)', r'\3/\2/\1', texto03))
 
+    # remover espaço em branco
+    texto04 = '      python    '
+    print(texto04.strip())
+
+    # remover caracteres repetidos no inicio
+    texto05 = '----------javascript---------'
+    print(texto05.strip('-'))
+
+    # remover apenas do lado esquerdo
+    texto06 = '------------php'
+    print(texto06.lstrip('-'))
+
+    # remover apenas do lado direito
+    texto07 = 'mysql----------'
+    print(texto07.rstrip('-'))
     # acessar cada caracter
     # nome = 'roberto'
 
