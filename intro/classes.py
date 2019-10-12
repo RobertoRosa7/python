@@ -28,4 +28,12 @@ def createUser():
     pessoa1.setName('Roberto Rosa')
     print(pessoa1.getName())
 
-createUser()
+
+class SomentePares(numbers):
+    '''
+        Classe - Somente pares, retornar somentes números pares
+    '''
+
+    def append(self, integer):
+        if not isistance(integer, int):
+            raise TypeError('Use somente números inteiros: ex: 1,2,3')
