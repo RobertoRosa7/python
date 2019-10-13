@@ -1,6 +1,6 @@
-## RestFull API with Flask
+# RestFull API with Flask
 
-# What are the pre-requisites?
+## What are the pre-requisites?
   - Python basics
   - Flask Introduction and Advanced
 
