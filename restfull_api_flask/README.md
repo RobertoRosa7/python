@@ -4,10 +4,12 @@
   - Python basics
   - Flask Introduction and Advanced
 
-- API's and the six constrains of REST
+## API's and the six constrains of REST
  - Uniform interface
  - Stateless
  - Cacheable
  - Client-Server
  - Layered System
  - Code on Demond (optional)
+
+[x] create file requirements.txt
