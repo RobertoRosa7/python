@@ -4,10 +4,10 @@
   - Python basics
   - Flask Introduction and Advanced
 
-[x] API's and the six constrains of REST
- [x] Uniform interface
- [x] Stateless
- [x] Cacheable
- [x] Client-Server
- [x] Layered System
- [x] Code on Demond (optional)
+- API's and the six constrains of REST
+ - Uniform interface
+ - Stateless
+ - Cacheable
+ - Client-Server
+ - Layered System
+ - Code on Demond (optional)
