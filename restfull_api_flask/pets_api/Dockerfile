@@ -3,7 +3,7 @@
 #
 
 # Pull base image
-FROM python:3.4.5-slim
+FROM python:3
 
 # Get some custom packages
 RUN apt-get update && apt-get install -y \
@@ -11,7 +11,9 @@ RUN apt-get update && apt-get install -y \
   make \
   gcc \
   python3-dev \
-  mongodb
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 \
+  echo "deb http://repo.mongodb.org/apt/debian "$(lsb_release -sc)"/mongodb-org/4.0 main" | tee /etc/apt/sources.list.d/mongodb.list \
+  mongodb-org
 
 # Make local directory
 RUN mkdir /opt/pets-api
@@ -23,6 +25,7 @@ WORKDIR /opt/pets-api
 ADD . .
 
 # PIP install
+RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # listen on port
