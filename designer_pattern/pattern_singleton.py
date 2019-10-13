@@ -8,7 +8,22 @@ class Singleton(object):
       cls.instance = super(Singleton, cls).__new__(cls)
     return cls.instance
 
-s1 = Singleton()
-print(s1)
-s2 = Singleton()
-print(s2)
+
+# Lazy instance - instancia preguiçosa
+class LazySingleton(object):
+  __instance = None
+  def __init__(self):
+    if not LazySingleton.__instance:
+      print('__init__ foi chamado')
+    else:
+      print('instancia já foi criada', self.getInstance())
+  
+  @classmethod
+  def getInstance(cls):
+    if not cls.__instance:
+      cls.__instance = LazySingleton()
+    return cls.__instance
+
+s1 = LazySingleton()
+print('Objeto criado: ', LazySingleton.getInstance())
+s2 = LazySingleton()
