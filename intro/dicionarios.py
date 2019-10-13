@@ -2,12 +2,31 @@
 """
     Trabalhando com dicionários
 """
+import json
 import random
 import itertools
 from collections import defaultdict, OrderedDict, Counter
 from operator import itemgetter
 from databases import database, mix, strings, names, numbers, people, sequence, products
 
+def convertJson():
+    '''
+        Convertendo estrutura de dados json em dict pyhton
+    '''
+    data = {
+        'name':'Roberto',
+        'lastname':'Rosa da Silva',
+        'idade':32
+    }
+
+    jsonStr = json.dumps(data)
+    print(jsonStr)
+    print(type(jsonStr))
+    data = json.loads(jsonStr)
+    print(data)
+    print(type(data))
+
+convertJson()
 def extractingValuesFromDict():
     moreThanHundred = {key: value for key, value in products.items() if value > 100}
     lessThanFifty = {key: value for key, value in products.items() if value < 50}
@@ -47,7 +66,7 @@ def calcWidthDict():
 
 def implementsTuplas():
     '''
-        Implementando tuplas com a função zip - combinação de elementos de tuplas 
+        Implementando tuplas com a função zip - combinação de elementos de tuplas
     '''
     # junção do primeiro indice o array1 com o primeiro indice do array2
     # result = zip([1,2,3], [4,5,6])
@@ -58,7 +77,7 @@ def concatList():
     comb = itertools.chain(strings, numbers, mix)
 
     print(comb)
-    
+
 def useGet():
     '''
         Trabalhando com método get em listas
@@ -75,7 +94,7 @@ def filterList():
     '''
         Criando uma lista somente com indice pares:
     '''
-    
+
     # filtro de pares
     par = [x for x in range(11) if x % 2 == 0]
 
@@ -153,7 +172,7 @@ def list():
     # percorrer uma lista de modo inverso
     # for i in reversed(sequence):
     #     print(i)
-    
+
     # somente valores positivos de uma lista com valores mistos
     # print([i for i in sequence if i > 0])
 
@@ -195,12 +214,12 @@ def list():
     # print(mix.count('Brasil'))
 
     # ordenação de lista do dicionarios
-    # orderByName = sorted(database, key=itemgetter('name'))
-    # orderByAge = sorted(database, key=itemgetter('age'))
-    # print(orderByName)
-    # print(orderByAge)
+    orderByName = sorted(database, key=itemgetter('name'))
+    orderByAge = sorted(database, key=itemgetter('age'))
+    print(orderByName)
+    print(orderByAge)
 
-list()
+
 def tuplas():
     '''
         Estrutura de dados que NÃO permite alteração após sua declaração
