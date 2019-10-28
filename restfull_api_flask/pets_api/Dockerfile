@@ -21,7 +21,7 @@ RUN mkdir /opt/pets-api
 # Set 'pets-api' as working directory
 WORKDIR /opt/pets-api
 
-# coe all file
+# copy all file
 ADD . .
 
 # PIP install
@@ -32,4 +32,4 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 # start
-CMD python manage.py runserver
+CMD ls
