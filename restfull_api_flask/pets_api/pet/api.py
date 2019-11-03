@@ -10,5 +10,18 @@ class PetAPI(MethodView):
         {'id': 4, 'name': u'Sansao'}
     ]
 
+    # listar todos os dados
     def get(self):
         return jsonify({'pets': self.pets})
+
+    # criar um novo 
+    def post(self):
+        # verificação básica de dados inicial
+        if not request.json or not 'name' in request.json:
+            abort(400)
+        pet = {
+            "id": len(self.pets) + 1,
+            "name": request.json["name"]
+        }
+        self.pets.append(pet)
+        return jsonify({'pet': pet}), 201
