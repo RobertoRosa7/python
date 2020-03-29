@@ -12,7 +12,7 @@ class PetAPI(MethodView):
 
     # listar todos os dados
     def get(self):
-        return jsonify({'pets': self.pets})
+        return jsonify({'pets': self.pets}), 200
 
     # criar um novo 
     def post(self):
