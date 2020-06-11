@@ -9,7 +9,7 @@ db.commit()
 
 # criando dados para inserção no banco de dados
 stocks = [
-  ('Iphone plus', 100, 2999.99), 
+  ('Iphone plus', 100, 2999.99),
   ('Macbook air', 200, 5999.99),
   ('SamSung', 300, 1999.49)
 ]
