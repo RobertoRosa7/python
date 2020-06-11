@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-## LOOPS
-someList = [1,2,3,4]
-otherList = list(range(0,100,2))
+# LOOPS
+someList = [1, 2, 3, 4]
+otherList = list(range(0, 100, 2))
 supplies = ['pens', 'staplers', 'flame-throwers', 'binders']
 
 # BASICS
@@ -22,4 +22,4 @@ supplies = ['pens', 'staplers', 'flame-throwers', 'binders']
 # for i in range(len(otherList)):
 #   print(i)
 for i in range(len(supplies)):
-  print('Index ' + str(i) + ' in suppplies is: ' + supplies[i])
+  print('Index ' + str(i) + ' in supplies is: ' + supplies[i])
