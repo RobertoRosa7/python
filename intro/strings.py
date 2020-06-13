@@ -5,18 +5,18 @@ import re
 
 def find_match():
   """
-    Muito utilizado para URL's isso indica uma exata correspondência de caracteres
-    o método match só verifica o início de uma string, e (r) é usado para strings simples
-    que não há necessidade de usar barra invertida
+  Muito utilizado para URL's isso indica uma exata correspondência de caracteres
+  o método match só verifica o início de uma string, e (r) é usado para strings simples
+  que não há necessidade de usar barra invertida
 
-    print(fnmatch('arquivo.txt', '*.txt')) return true
-    print(fnmatch('file.py', '*.txt')) return false
-    print(fnmatch('arquivo0001.txt', 'arquivo[0-9]*')) return true
-    print(fnmatch('arquivo002.png', '*.txt')) return false
-    print(fnmatchcase('arq.txt', '*.TXT')) return false
+  print(fnmatch('arquivo.txt', '*.txt')) return true
+  print(fnmatch('file.py', '*.txt')) return false
+  print(fnmatch('arquivo0001.txt', 'arquivo[0-9]*')) return true
+  print(fnmatch('arquivo002.png', '*.txt')) return false
+  print(fnmatchcase('arq.txt', '*.TXT')) return false
   """
   url = 'https://'
-  default_pattern = re.compile(r'\d+/\d+/\d+') # default pattern
+  default_pattern = re.compile(r'\d+/\d+/\d+')  # default pattern
   match_data = re.compile(r'\d+/\d+/d+\d+')  # data = '06/11/2019'
   match_url = default_pattern.match(url)  # url = 'https://'
 
@@ -29,18 +29,18 @@ def find_match():
 
 def strings():
   """
-      Manipulação de strings
-      acessar cada caracter
-      nome = 'roberto'
-      substituir algum caracter por outro
-      nome = 'roberto'
-      lista = list(nome) necessário para substituíção
-      lista[0] = 't'
-      nome = ''.join(lista)
-      para saber o final de uma string | .txt | .png | .pdf | .zip etc...
-      file = 'arquivo.txt'
-      print(file.endswith('.txt')) return boolean
-      print(file.startswith('arq')) return boolean
+  Manipulação de strings
+  acessar cada caracter
+  nome = 'roberto'
+  substituir algum caracter por outro
+  nome = 'roberto'
+  lista = list(nome) necessário para substituíção
+  lista[0] = 't'
+  nome = ''.join(lista)
+  para saber o final de uma string | .txt | .png | .pdf | .zip etc...
+  file = 'arquivo.txt'
+  print(file.endswith('.txt')) return boolean
+  print(file.startswith('arq')) return boolean
   """
 
   texto = 'eu amo estudar javascript, mas no meu tempo livre estudo python'
@@ -71,10 +71,23 @@ strings()
 
 def string_imutaveis():
   """
-    Strings in python são imutáveis por não poder receber atribuição de novos valores em suas
-    string = python
-    string[0] = 'a' error não é possível realizar esta instrução
+  Strings in python são imutáveis por não poder receber atribuição de novos valores em suas
+  string = python
+  string[0] = 'a' error não é possível realizar esta instrução
   """
   name = 'python'
   name = 'J' + name[1:]
   print(name)
+
+
+def raw_string():
+  """
+  raw string only r, usado para tratar texto puro, sem nenhuma formatação de caracteres especiais
+  """
+
+  print(r'Isso é um texto\'s usando raw string')  # raw string
+  print("Isso é um texto's usando aspas duplas e simples")  # aspas duplas
+  print('Isso é um texto\'s usando barra escape') # barra escape
+
+
+raw_string()
