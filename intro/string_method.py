@@ -35,4 +35,3 @@ text.lstrip()  # remove whitespace left side only
 text.strip('a')  # remove all occurrence
 text.replace('e', 'a')  # replace all occurrence e for a
 
-

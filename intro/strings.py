@@ -2,6 +2,11 @@
 from fnmatch import fnmatch, fnmatchcase
 import re
 
+firstname = 'Roberto'
+lastname = 'Rosa'
+country = 'Brazil'
+age = 33
+
 
 def find_match():
   """
@@ -66,9 +71,6 @@ def strings():
   print(texto07.rstrip('-'))  # remover apenas do lado direito
 
 
-strings()
-
-
 def string_imutaveis():
   """
   Strings in python são imutáveis por não poder receber atribuição de novos valores em suas
@@ -90,4 +92,8 @@ def raw_string():
   print('Isso é um texto\'s usando barra escape') # barra escape
 
 
-raw_string()
+def format_string():
+  print('Hello %s do you where from %s and your age is %s?' % (firstname, country, age))
+
+
+format_string()
