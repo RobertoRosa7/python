@@ -4,7 +4,7 @@ import random
 print('Olá qual é o seu nome?')
 name = input()
 
-secretNumber = random.randint(1,20)
+secretNumber = random.randint(1, 20)
 print('Olá ' + name + ' pense num número entre 1 e 20')
 
 # print('DEBUG: The secret number is: ', str(secretNumber))
@@ -23,4 +23,4 @@ for guessTaken in range(1, 6):
 if guess == secretNumber:
   print('Boa escolha ' + name + ', acertou em apenas ' + str(guessTaken) + ' tentativas')
 else:
-  print('Você ultrapassaou o limite de tentativas: ' + '('+ str(guessTaken) + ')')
+  print('Você ultrapassaou o limite de tentativas: ' + '(' + str(guessTaken) + ')')
