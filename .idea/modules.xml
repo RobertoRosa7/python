@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/python.iml" filepath="$PROJECT_DIR$/.idea/python.iml" />
+      <module fileurl="file://$USER_HOME$/Área de Trabalho/rendafixa/rendafixa_apis/.idea/rendafixa_apis.iml" filepath="$USER_HOME$/Área de Trabalho/rendafixa/rendafixa_apis/.idea/rendafixa_apis.iml" />
     </modules>
   </component>
 </project>
