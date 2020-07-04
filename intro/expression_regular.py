@@ -12,37 +12,57 @@ landline_regex = re.compile(r'\d\d-\d\d-\d\d\d\d-\d\d\d\d')
 match_mobile = mobile_regex.search(message)
 match_landline = landline_regex.search(message)
 
-print('mobile found', match_mobile.group())
-print('landline found', match_landline.group())
-print('find all', mobile_regex.findall(message))
-print('find all', landline_regex.findall(message))
+def notification(**Kwargs):
+  for key, value in Kwargs.items():
+    print("%s == %s" %(key, value))
+
+notification(
+  mobileFound=match_mobile.group(), 
+  landline=match_landline.group(),
+  mobileFindAll=mobile_regex.findall(message),
+  landlineFindAll=landline_regex.findall(message))
 
 
-def notification(msg):
-  print(msg)
+def search_number_phone(number):
+  phone_number = re.compile(r'(\d\d)-(\d\d\d\d\d-\d\d\d\d)')
+  phone_number_space = re.compile(r'\(\d\d\) (\d\d\d\d\d-\d\d\d\d)')  # use \(and\) to match literal parenteses
+  find_one_or_others = re.compile(r'Bat(man|mobile|copter|bat)')
+
+  try:
+    mo = phone_number.search(number).group()  # print all group
+    mo1 = phone_number.search(number).group(1)  # print first group
+    mo2 = phone_number.search(number).group(2)  # print second group
+    mos = phone_number_space.search(number).group()
+    bat = find_one_or_others.search(number).group()
+
+    notification(groupOne=mo, groupTwo=mo1, groupThree=mo2, grougSpace=mos, bat=bat)
+  except AttributeError:
+    notification(message='Não foi encontrado nenhum número valido de celular\nEx: 11-91234-5678\nAttributeError')
+  except TypeError:
+    notification(message='Não foi encontrado nenhum número valido de celular\nEx: 11-91234-5678\nTypeError')
 
 
 def is_phone_number(number):
   if len(number) != 12:
-    notification('not phone size')  # not phone size
+    notification(sizePhone='not phone size')  # not phone size
     return False
   for i in range(0, 3):
     if not number[i].isdecimal():
-      notification('not code area')  # not code area
+      notification(codeArea='not code area')  # not code area
       return False
   if number[3] != '-':
-    notification('missing dash')  # missing dash
+    notification(missDash='missing dash')  # missing dash
     return False
   for i in range(4, 7):
     if not number[i].isdecimal():
-      notification('not first 3 digits')  # not first 3 digits
+      notification(firstThreeDigits='not first 3 digits')  # not first 3 digits
       return False
   if number[7] != '-':
-    notification('missing second dash')  # missing second dash
+    notification(secondDash='missing second dash')  # missing second dash
     return False
   for i in range(8, 12):
     if not number[i].isdecimal():
-      notification('missing last 4 digits')  # missing last 4 digits
+      notification(lastDigits='missing last 4 digits')  # missing last 4 digits
       return False
   return True
 
@@ -76,3 +96,6 @@ def search_phone(text):
 
   if not flag_number:
     print('could not find any phone numbers')
+
+
+search_number_phone('My phone number is: 11-94161-6008, (11) 94161-6008 Batbat')
