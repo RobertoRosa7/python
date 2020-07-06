@@ -12,9 +12,11 @@ landline_regex = re.compile(r'\d\d-\d\d-\d\d\d\d-\d\d\d\d')
 match_mobile = mobile_regex.search(message)
 match_landline = landline_regex.search(message)
 
+
 def notification(**Kwargs):
   for key, value in Kwargs.items():
-    print("%s == %s" %(key, value))
+    print("%s -> %s" %(key, value))
+
 
 notification(
   mobileFound=match_mobile.group(), 
@@ -23,19 +25,30 @@ notification(
   landlineFindAll=landline_regex.findall(message))
 
 
+def match_strings(string):
+  try:
+    res = re.compile(r'Bat(wo)?man').search(string).group()  # wo is opcional
+    any_string_one = re.compile(r'(ha){3}').search(string).group()
+    bat = re.compile(r'Bat(man|mobile|copter|bat)').search(string).group() # or
+
+    notification(match=res, anyString=any_string_one)
+  except AttributeError:
+    notification(message='Nenhum resultado encontrado')
+
+
 def search_number_phone(number):
   phone_number = re.compile(r'(\d\d)-(\d\d\d\d\d-\d\d\d\d)')
   phone_number_space = re.compile(r'\(\d\d\) (\d\d\d\d\d-\d\d\d\d)')  # use \(and\) to match literal parenteses
-  find_one_or_others = re.compile(r'Bat(man|mobile|copter|bat)')
+  ddd_opcional = re.compile(r'(\d\d)? (\d\d\d\d\d-\d\d\d\d)')  # DDD is opcional
 
   try:
     mo = phone_number.search(number).group()  # print all group
     mo1 = phone_number.search(number).group(1)  # print first group
     mo2 = phone_number.search(number).group(2)  # print second group
     mos = phone_number_space.search(number).group()
-    bat = find_one_or_others.search(number).group()
+    ddd = ddd_opcional.search(number).group()
 
-    notification(groupOne=mo, groupTwo=mo1, groupThree=mo2, grougSpace=mos, bat=bat)
+    notification(groupOne=mo, groupTwo=mo1, groupThree=mo2, grougSpace=mos, ddd=ddd)
   except AttributeError:
     notification(message='Não foi encontrado nenhum número valido de celular\nEx: 11-91234-5678\nAttributeError')
   except TypeError:
@@ -98,4 +111,4 @@ def search_phone(text):
     print('could not find any phone numbers')
 
 
-search_number_phone('My phone number is: 11-94161-6008, (11) 94161-6008 Batbat')
+match_strings('My number is: 11-94161-6008 (11) 94161-6008 94161-6008 hahaha batman')
