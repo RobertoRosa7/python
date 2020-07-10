@@ -29,9 +29,9 @@ def match_strings(string):
   try:
     res = re.compile(r'Bat(wo)?man').search(string).group()  # wo is opcional
     any_string_one = re.compile(r'(ha){3}').search(string).group()
-    bat = re.compile(r'Bat(man|mobile|copter|bat)').search(string).group() # or
+    bats_one = re.compile(r'Bat(man|mobile|copter|bat)').search(string).group()  # or
 
-    notification(match=res, anyString=any_string_one)
+    notification(match=res, anyString=any_string_one, batFound=bats_one)
   except AttributeError:
     notification(message='Nenhum resultado encontrado')
 
@@ -111,4 +111,23 @@ def search_phone(text):
     print('could not find any phone numbers')
 
 
-match_strings('My number is: 11-94161-6008 (11) 94161-6008 94161-6008 hahaha batman')
+def find_all_expression():
+  find_all_any = re.compile(r'.at').findall('the cat in the hat sat on the flat mat')  # any character
+  find = re.compile(r'^\d+$').search('123424023408').group()  # everything that begins and ends with numbers
+  the_first_and_the_last_name = re.compile(r'First name: (.*) Last name: (.*)').findall('First name: Roberto Last name: Rosa')
+  search_anything = re.compile(r'<(.*?)>').findall('<Hello> is real>')
+  search_with_new_line = re.compile(r'.*', re.DOTALL).search('is\nother\nnew line').group()
+  search_and_ignore_case = re.compile(r'[aeiou]', re.IGNORECASE).findall('Al, why you does your programming book talk')
+
+
+  notification(
+    a=find, 
+    b=find_all_any, 
+    c=the_first_and_the_last_name, 
+    d=search_anything,
+    e=search_with_new_line,
+    i=search_and_ignore_case
+  )
+
+
+find_all_expression()
