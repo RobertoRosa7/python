@@ -1,9 +1,13 @@
-# Python - Search phone number 
+# Python
 
-##### TODO: 
-###### 11/07/2020
-- [ ] Create regex for `phone` numbers
-- [ ] Create regex for `email` address
-- [ ] Get text off clipboard
-- [ ] Extract the `email/phone` number from text
-- [ ] Copy the extracted `email/phone` to the clipboard
+### Search phone number
+
+#### Using pyperclip to clipboard text
+
+###### 11/07/2020 - 11/07/2020
+
+- [x] Create regex for `phone` numbers
+- [x] Create regex for `email` address
+- [x] Get text off clipboard
+- [x] Extract the `email/phone` number from text
+- [x] Copy the extracted `email/phone` to the clipboard
