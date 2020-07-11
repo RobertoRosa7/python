@@ -3,7 +3,11 @@ import re
 
 """
 Expression Regular Basic
+re.DOTALL               - Include break line
+re.I or re.IGNORECASE   - Ignore case sensitive
+re.VERBOSE              - use multiple line options
 """
+
 message = 'Hello my phone number is: 55-11-94161-6008, anyway, you can call me in 55-11-3602-0022'
 phone_found = []
 mobile_regex = re.compile(r'\d\d-\d\d-\d\d\d\d\d-\d\d\d\d')
@@ -119,7 +123,6 @@ def find_all_expression():
   search_with_new_line = re.compile(r'.*', re.DOTALL).search('is\nother\nnew line').group()
   search_and_ignore_case = re.compile(r'[aeiou]', re.IGNORECASE).findall('Al, why you does your programming book talk')
 
-
   notification(
     a=find, 
     b=find_all_any, 
@@ -130,4 +133,22 @@ def find_all_expression():
   )
 
 
-find_all_expression()
+def replace_string():
+  text = 'Agent Roberto gave the secret documents to Agent Alice, +55 11 94161-6008'
+
+  search_name = re.compile(r'Agent \w+').findall(text)
+  replace_name = re.compile(r'Agent (\w)\w*').sub(r'Agent \1******', text)
+  use_verbose = re.compile(r'''
+  (\d\d) |      # area code with parens
+  (\(\d\d)\)    # -or- area code with parens and no dash
+  -
+  \d\d\d\d\d   # first term
+  -
+  \d\d\d       # last term
+  \sx\d{2,4}   # extension, like x1234
+  ''', re.VERBOSE | re.IGNORECASE | re.DOTALL).findall(text)
+
+  notification(a=search_name, b=replace_name, c=use_verbose)
+
+
+replace_string()
