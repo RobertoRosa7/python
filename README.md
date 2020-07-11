@@ -1,10 +1,19 @@
 # Python
 
+### Filename and File path
+
+###### 11/07/2020
+
+- [x] Root Directory c:\ for `Windows` and / for `Linux and Mac`
+- [x] Identify path from System Operator
+- [x] Identify Relative path and Absolute path
+- [x] Handler relative and absolute path with `os.path.isabs`
+- [x] Diference between in basename and dirname
+- [ ] Get size all files into directory and list them
+
 ### Search phone number
 
-#### Using pyperclip to clipboard text
-
-###### 11/07/2020 - 11/07/2020
+##### Using pyperclip to clipboard text
 
 - [x] Create regex for `phone` numbers
 - [x] Create regex for `email` address
