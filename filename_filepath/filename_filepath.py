@@ -40,4 +40,4 @@ def get_total_size():
   debug(totalSize=total_size)
 
 
-get_total_size()
+debug(path=current_path)

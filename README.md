@@ -5,6 +5,7 @@
 ### Reading and Writting Plaintext File
 
 * [x] Open, Read and Write File
+* [x] Copying, Moving files and folders
 
 ###### 11/07/2020
 
