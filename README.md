@@ -1,31 +1,15 @@
 # Python
 
+###### 01/10/2019
+
+* [x] Server
+* [x] Webcrawler
+
 ###### 11/07/2020
 
-### Filename and File path
+* [x] Filename and File path
+* [x] Search phone number
 
-* [x] Root Directory c:\ for `Windows` and / for `Linux and Mac`
-* [x] Identify path from System Operator
-* [x] Identify Relative path and Absolute path
-* [x] Handler relative and absolute path with `os.path.isabs`
-* [x] Diference between in basename and dirname
-* [x] Get size all files into directory and list them
+###### 12/07/2020
 
-### Search phone number
-
-##### Using pyperclip to clipboard text
-
-* [x] Create regex for `phone` numbers
-* [x] Create regex for `email` address
-* [x] Get text off clipboard
-* [x] Extract the `email/phone` number from text
-* [x] Copy the extracted `email/phone` to the clipboard
-
-###### 12/07/2020 - 19/07/2020
-
-### Reading and Writting Plaintext File
-
-* [x] Open, Read and Write File
-* [x] Copying, Moving and Rename files and folders
-* [x] Delete file and folder
-* [ ] Walking on folders
+* [x] Reading and Writting Plaintext File

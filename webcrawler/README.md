@@ -1,6 +1,6 @@
 # WebCrawler com Python - usando módulo scrapy
 
-** Instalação **
+###### ** Instalação **
 ```
   -> pip install scrapy
   ou
@@ -23,8 +23,8 @@ ou em formato de texto.
   -> print(response.text)
 ```
 
-# Usando CSS Selector para extração
-Exemplo:
+## Usando CSS Selector para extração
+###### Exemplo:
 
 ```
   -> response.css(".product::text").extract_first()
@@ -38,7 +38,7 @@ preços dos produtos.
   -> response.css(".value::text").extract()
 ```
 
-# Usando Xpath para navegar pelos Nodes do HTML ou XML
+## Usando Xpath para navegar pelos Nodes do HTML ou XML
 
 Atráves do xpath podemos navegar pelas children e parent nodes, assim podemos
 fazer filtros mais específicos para extrair somente informações pertinentes.
@@ -64,7 +64,7 @@ Use text() para extrair todo texto que está no elemento
 
 
 
-# Criando um projeto com scrapy
+## Criando um projeto com scrapy
 
 Para fazer um projeto com todos os dados e também exportar esses dados em formato
 como cvs ou json, é preciso criar um projeto e para isso, vamos usar o scrapy
