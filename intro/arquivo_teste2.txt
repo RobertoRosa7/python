@@ -1,3 +1,0 @@
-este arquivo foi criado com python
-este é uma nova linha com python usando (modo a)
-este é uma nova linha com python usando (modo a)

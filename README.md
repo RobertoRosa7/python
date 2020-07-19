@@ -1,12 +1,5 @@
 # Python
 
-###### 12/07/2020
-
-### Reading and Writting Plaintext File
-
-* [x] Open, Read and Write File
-* [x] Copying, Moving files and folders
-
 ###### 11/07/2020
 
 ### Filename and File path
@@ -27,3 +20,12 @@
 * [x] Get text off clipboard
 * [x] Extract the `email/phone` number from text
 * [x] Copy the extracted `email/phone` to the clipboard
+
+###### 12/07/2020 - 19/07/2020
+
+### Reading and Writting Plaintext File
+
+* [x] Open, Read and Write File
+* [x] Copying, Moving and Rename files and folders
+* [x] Delete file and folder
+* [ ] Walking on folders
