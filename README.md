@@ -11,5 +11,5 @@
 * [x] Intro
     ###### 12/07/2020
 
-    - [x] Reading and Writting Plaintext File
-    -  [x] Filename and File path
+    - Reading and Writting Plaintext File
+    - Filename and File path
