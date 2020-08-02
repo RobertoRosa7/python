@@ -19,3 +19,11 @@
 * [x] Copying, Moving and Rename files and folders
 * [x] Delete file and folder
 * [x] Walking on folders
+
+###### 02/08/2020
+
+### Debugging
+
+* [x] The Raise and assert Statements
+* [ ] Logging
+* [ ] Using Debugging

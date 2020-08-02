@@ -28,3 +28,7 @@
   + Copying, Moving and Rename files and folders
   + Delete file and folder
   + Walking on folders
+
+  ###### 02/08/2020
+
+  + Debugging
