@@ -26,4 +26,4 @@
 
 * [x] The Raise and assert Statements
 * [x] Logging
-* [ ] Using Debugging
+* [x] Using Debugging
