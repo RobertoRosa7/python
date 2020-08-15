@@ -32,3 +32,12 @@
   ###### 02/08/2020
 
   + Debugging
+
+* [x] Web Crawler
+
+  ###### 15/08/2020
+
+  + Web browser module
+  + Download from the web with the request Module
+  + Parsing HTML with Beautiful Soup Module
+  + Controlling browser with Selenium Module
