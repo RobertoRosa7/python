@@ -41,3 +41,9 @@
   + Download from the web with the request Module
   + Parsing HTML with Beautiful Soup Module
   + Controlling browser with Selenium Module
+
+  ###### 27/08/2020
+
+  + Parsing HTML with the Beautiful Soup Module
+  + Get Price from Web Site
+  + Download content from Web Site
