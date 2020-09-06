@@ -27,3 +27,13 @@
 * [x] The Raise and assert Statements
 * [x] Logging
 * [x] Using Debugging
+
+###### 06/09/2020
+
+### Selenium
+
+* [x] Import Selenium
+* [x] Install geckodriver
+* [x] Open browser with webdriver, Firefox
+* [x] Find and select element width selector 
+* [x] Manipulate events of click, submit, back, forward and quit

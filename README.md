@@ -47,3 +47,7 @@
   + Parsing HTML with the Beautiful Soup Module
   + Get Price from Web Site
   + Download content from Web Site
+
+  ###### 06/09/2020
+
+  + Selenium
