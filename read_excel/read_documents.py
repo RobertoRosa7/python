@@ -17,11 +17,10 @@ def debug_type(**Kwargs):
     type('%s -> %s' %(index, value))
 
 
-def excel_read():
-  """
+"""
   Reading Excel Documents
-  """
-
+"""
+def excel_read():
   workbook = openpyxl.load_workbook('excel_document.xlsx')
   sheet = workbook.get_sheet_by_name('Sheet1')
   # all_sheets = workbook.get_sheet_names()
@@ -36,11 +35,10 @@ def excel_read():
     print(i, sheet.cell(row=i, column=2).value)
 
 
-def excel_edit():
-  """
+"""
   Editing Excel Document
-  """
-
+"""
+def excel_edit():
   wb = openpyxl.Workbook()
   sheet1 = wb.get_sheet_by_name('Sheet')
   sheet1['A1'] = 24
@@ -52,13 +50,11 @@ def excel_edit():
   debug(st=wb.get_sheet_names())
   wb.save('excel_document2.xlsx')
 
-
+"""
+  Read PDF File
+  Download: http://autbor.com/meetingminutes1.pdf, http://autbor.com/meetingminutes2.pdf
+"""
 def pdf_read():
-  """
-    Read PDF File
-    Download: http://autbor.com/meetingminutes1.pdf
-  """
-
   pdf_file = open('meetingminutes1.pdf', 'rb')
   reader = PyPDF2.PdfFileReader(pdf_file)
   # reader.numPages
@@ -70,4 +66,24 @@ def pdf_read():
 
   pdf_file.close()
 
-pdf_read()
+
+def combinated_file():
+  pdf1File = open('meetingminutes1.pdf', 'rb')
+  pdf2File = open('meetingminutes2.pdf', 'rb')
+  reader1 = PyPDF2.PdfFileReader(pdf1File)
+  reader2 = PyPDF2.PdfFileReader(pdf2File)
+  writer = PyPDF2.PdfFileWriter()
+
+  for pageNum in range(reader1.numPages):
+    page = reader1.getPage(pageNum)
+    writer.addPage(page)
+
+  for pageNum in range(reader2.numPages):
+    page = reader2.getPage(pageNum)
+    writer.addPage(page)
+
+  outputFile = open('combinatedminutes.pdf', 'wb')
+  writer.write(outputFile)
+  pdf1File.close()
+  pdf2File.close()
+
