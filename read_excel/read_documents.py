@@ -4,6 +4,7 @@ import openpyxl
 import os
 import PyPDF2
 
+
 os.chdir('/home/mendoza/Documentos/udemy/python/read_excel')
 
 
@@ -50,6 +51,7 @@ def excel_edit():
   debug(st=wb.get_sheet_names())
   wb.save('excel_document2.xlsx')
 
+
 """
   Read PDF File
   Download: http://autbor.com/meetingminutes1.pdf, http://autbor.com/meetingminutes2.pdf
@@ -86,4 +88,3 @@ def combinated_file():
   writer.write(outputFile)
   pdf1File.close()
   pdf2File.close()
-
