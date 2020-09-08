@@ -51,3 +51,14 @@
   ###### 06/09/2020
 
   + Selenium
+
+* [x] Read Excel, Word and PDF
+
+  ##### 08/09/2020
+
+  ### Excel, Word and PDF Documents
+
+  + Reading Excel SpreadSheets
+  + Editing Excel SpreadSheets
+  + Reading PDF and Excel
+  + Reading and editing Word Documents
