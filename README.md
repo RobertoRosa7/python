@@ -56,8 +56,6 @@
 
   ##### 08/09/2020
 
-  ### Excel, Word and PDF Documents
-
   + Reading Excel SpreadSheets
   + Editing Excel SpreadSheets
   + Reading PDF and Excel
