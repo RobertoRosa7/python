@@ -5,3 +5,4 @@
   + Reading Excel SpreadSheets
   + Editing Excel SpreadSheets
   + Reading and Editing PDFs
+  + Reading and Editing Word Documents

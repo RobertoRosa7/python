@@ -3,6 +3,7 @@
 import openpyxl
 import os
 import PyPDF2
+import docx
 
 
 os.chdir('/home/mendoza/Documentos/udemy/python/read_excel')
@@ -88,3 +89,34 @@ def combinated_file():
   writer.write(outputFile)
   pdf1File.close()
   pdf2File.close()
+
+
+"""
+  Read Word Document
+"""
+def word_read():
+  d = docx.Document('word_document.docx')  # new instance
+  p = d.paragraphs[1]
+  # debug(first=d.paragraphs[0].text, second=d.paragraphs[1].text)
+  # debug(a=p.runs[0].text, b=p.runs[1].text, c=p.runs[2].text, d=p.runs[3].text, f=p.runs[1].bold, g=p.runs[3].italic)
+
+  # p.runs[3].underline = True
+  # p.runs[3].text = 'Italico e sobrelinha'
+  # d.save('word-document2.docx')
+
+  # print(p.style)  # identificar estilos dos caracteres
+  # d.add_paragraph('some text here')  # new paragraph
+  # p.add_run('some text here') # new text on paragraph
+
+
+def fetchWordText(filename):
+  doc = docx.Document(filename)
+  fulltext = []
+
+  for p in doc.paragraphs:
+    fulltext.append(p.text)
+  
+  return '\n'.join(fulltext)
+
+
+debug(p=fetchWordText('word_document.docx'))
