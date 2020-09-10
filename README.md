@@ -1,10 +1,10 @@
 # Python
 
-[x] Intro
-[x] Search phone number
-[x] WebCrawler
-[x] API Pets
-[x] Read Excel, Word and PDF
+* [x] Intro
+* [x] Search phone number
+* [x] WebCrawler
+* [x] API Pets
+* [x] Read Excel, Word and PDF
 
 ###### 11/07/2020
 
