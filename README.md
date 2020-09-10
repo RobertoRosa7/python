@@ -1,9 +1,10 @@
 # Python
 
-###### 01/10/2019
-
-* [x] Webcrawler
-* [x] API Pets
+[x] Intro
+[x] Search phone number
+[x] WebCrawler
+[x] API Pets
+[x] Read Excel, Word and PDF
 
 ###### 11/07/2020
 
