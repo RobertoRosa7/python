@@ -27,8 +27,10 @@ convert_json()
 
 
 def extractingValuesFromDict():
-    moreThanHundred = {key: value for key, value in products.items() if value > 100}
-    lessThanFifty = {key: value for key, value in products.items() if value < 50}
+    moreThanHundred = {key: value for key,
+                       value in products.items() if value > 100}
+    lessThanFifty = {key: value for key,
+                     value in products.items() if value < 50}
     print("maior que R$ 100,00", moreThanHundred)
     print("menor que R$ 50,00", lessThanFifty)
 
@@ -124,7 +126,6 @@ def intro():
     #     print('esta na lista:')
     # else:
     #     print('não esta na lista:')
-
     """
         ordenando lista com sort()
     """
@@ -296,4 +297,3 @@ def orderedDict():
     # loop for list ordering
     for i in order:
         print(i, order[i])
-

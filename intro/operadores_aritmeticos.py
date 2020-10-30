@@ -4,9 +4,11 @@ import math
 # from module import * # importação total não precisar usar module.fn
 from databases import sequence
 
+
 def rootSquare():
     # root square for number more than 3 - method comprehension
     print([math.sqrt(i) for i in sequence if i >= 5])
+
 
 def mathsOperations():
     """
@@ -75,6 +77,7 @@ def mathsOperations():
 
     # com expressão geradora, ganho de desempenho em caso de lista grandes, sem ganho de memório
     # print(sum(x * x for x in sequence if x > 5))
+
 
 mathsOperations()
 # executando funções do módulo aqui neste script

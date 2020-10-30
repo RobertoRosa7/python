@@ -23,18 +23,18 @@ theList.remove('hi')
 
 # METHOD SORT()
 def split_and_order():
-  for i in range(len(theList)):
-    if type(theList[i]) == str:
-      only_strings.append(theList[i])
-    elif type(theList[i]) == int:
-      only_numbers.append(theList[i])
-  only_numbers.sort()
-  only_strings.sort()
-  print(only_numbers + only_strings)
+    for i in range(len(theList)):
+        if type(theList[i]) == str:
+            only_strings.append(theList[i])
+        elif type(theList[i]) == int:
+            only_numbers.append(theList[i])
+    only_numbers.sort()
+    only_strings.sort()
+    print(only_numbers + only_strings)
 
 
 def eggs(some_parameter):
-  some_parameter.append('Hello')
+    some_parameter.append('Hello')
 
 
 num = [1, 2, 3]
