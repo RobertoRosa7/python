@@ -5,6 +5,7 @@
 - [x] WebCrawler
 - [x] API Pets
 - [x] Read Excel, Word and PDF
+- [x] Machine Learning
 
 ###### 11/07/2020
 
