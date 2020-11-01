@@ -5,7 +5,7 @@
 - [x] WebCrawler
 - [x] API Pets
 - [x] Read Excel, Word and PDF
-- [x] Machine Learning
+- [x] Machine Learning and Data Science with Python
 
 ###### 11/07/2020
 
