@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 base = pd.read_csv(os.path.join(
-    os.getcwd(), 'python/machine_learning/databases/credit_data.csv'))
+    os.getcwd(), 'databases/credit_data.csv'))
 print(base.describe())
 
 
