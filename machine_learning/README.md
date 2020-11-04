@@ -15,3 +15,4 @@
 ###### 04/11/2020
 
 - Tratamento de valores inconsistentes
+- Tratamento de valores faltantes
