@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import numpy as np
 import os
@@ -11,11 +12,16 @@ def debug(**Kwargs):
         print('key %s, value %s' % (key, value))
 
 
+"""
+Leitura do arquivo CSV
+"""
 base = pd.read_csv(os.path.join(
     os.getcwd(), 'databases/credit_data.csv'))
 # print(base.describe())
 
-
+"""
+Tratamento de valores inconsistentes
+"""
 # base - mostra a tabela de dados - DataFrame
 # base.describe() - faz uma prévia análise descrevendo com porcentagem
 
@@ -44,12 +50,24 @@ base = pd.read_csv(os.path.join(
 # print(pd.isnull(base.age)) # geral
 # print(base.loc[pd.isnull(base.age)])  # somente idade
 
-
+"""
+Tratamento de valores faltantes
+"""
 # fazendo a divisão entre previsores e classe dos atributos
-previsores = base.iloc[:, 1:4].values  # todas as linhas do um até o 4
-classe = base.iloc[:, 4].values
+# previsores = base.iloc[:, 1:4].values  # todas as linhas do um até o 4
+# classe = base.iloc[:, 4].values
 
-imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
-imputer = imputer.fit(previsores[:, 0:3])
-previsores[:, 0:3] = imputer.transform(previsores[:, 0:3])
-print(previsores)
+# imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
+# imputer = imputer.fit(previsores[:, 0:3])
+# previsores[:, 0:3] = imputer.transform(previsores[:, 0:3])
+# print(previsores)
+
+
+"""
+Escalonamento de atributos
+Padronização (standardisation) x = x-média(x)/desvio_padrão(x)
+Normalização (normalization) x = x-mínimo(x)/máximo(x)-mínimo(x)
+"""
+scaler = StandardScaler()
+previsores = base.iloc[:, 1:4].values
+previsores = scaler.fit_transform(previsores)
