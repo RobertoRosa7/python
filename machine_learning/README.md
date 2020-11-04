@@ -16,3 +16,4 @@
 
 - Tratamento de valores inconsistentes
 - Tratamento de valores faltantes
+- Escalonamento de atributos

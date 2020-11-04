@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from sklearn.impute import SimpleImputer
 import pandas as pd
+import numpy as np
 import os
 
 
@@ -34,5 +36,20 @@ base = pd.read_csv(os.path.join(
 
 
 # Atualizar registro todas idades abaixo de zero
-base.loc[base.age < 0, 'age'] = 40.92
+# base.loc[base.age < 0, 'age'] = 40.92
 # print(base.loc[base['age'] < 0])
+
+
+# Verificando se há valores null
+# print(pd.isnull(base.age)) # geral
+# print(base.loc[pd.isnull(base.age)])  # somente idade
+
+
+# fazendo a divisão entre previsores e classe dos atributos
+previsores = base.iloc[:, 1:4].values  # todas as linhas do um até o 4
+classe = base.iloc[:, 4].values
+
+imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
+imputer = imputer.fit(previsores[:, 0:3])
+previsores[:, 0:3] = imputer.transform(previsores[:, 0:3])
+print(previsores)
