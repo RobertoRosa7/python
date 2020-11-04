@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
+import datetime
 import random
 import math
 import os
 import json
 import csv
+
 
 payload = {}
 
@@ -26,7 +28,7 @@ def converte_json_to_csv():
     # dcsv = pd.read_csv(os.path.join(os.getcwd(), 'databases/mega.csv'))
     # djson = pd.read_json(os.path.join(os.getcwd(), 'databases/mega.json'))
     # dataCsv = dataJson.to_csv(os.path.join(os.getcwd(), 'databases/mega.csv'), index=None)
-    
+
     with open(os.path.join(os.getcwd(), 'databases/mega.json'), 'r') as f:
         to_python = json.loads(f.read())
         with open(os.path.join(os.getcwd(), 'databases/mega.csv'), 'w') as fcsv:
@@ -43,4 +45,22 @@ def converte_json_to_csv():
                     ]
                 )
         fcsv.close()
+    f.close()
+
+
+# df = pd.read_csv(os.path.join(os.getcwd(), 'databases/mega.csv'))
+
+# with open(os.path.join(os.getcwd(), 'databases/mega.json'), 'r') as f:
+#     t = json.loads(f.read())
+#     teste = {'content': [0, 0, 0, 0, 0, 0],
+#              'date': '2020-11-03', 'concurso': '2024', 'created_at': str(datetime.datetime.now())}
+
+#     print('antes', len(t['mega']))
+#     t['mega'].append(teste)
+#     print('depois', len(t['mega']))
+#     print(t['mega'][-1])
+# f.close()
+
+with open(os.path.join(os.getcwd(), 'databases/mega.csv'), 'r') as f:
+    print(f.read())
     f.close()
