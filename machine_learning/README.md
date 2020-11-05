@@ -23,3 +23,4 @@
 ###### 05/11/2020
 
 - Avaliação de algoritmos
+- Divisão das bases de dados em treinamento e teste
