@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import StandardScaler
 import numpy as np
 import pandas as pd
 import datetime
@@ -8,13 +11,12 @@ import os
 import json
 import csv
 
-
 payload = {}
 accumulated = list()
 
 
-def pathDatabase(file):
-    return os.path.join(os.getcwd(), 'databases/' + file)
+def path_database(file):
+    return os.path.join(os.getcwd(), "databases/" + file)
 
 
 def otherWayToGenerateArray(n):
@@ -34,19 +36,19 @@ def converte_json_to_csv():
     # djson = pd.read_json(os.path.join(os.getcwd(), 'databases/mega.json'))
     # dataCsv = dataJson.to_csv(os.path.join(os.getcwd(), 'databases/mega.csv'), index=None)
 
-    with open(os.path.join(os.getcwd(), 'databases/mega.json'), 'r') as f:
+    with open(path_database("mega.json"), "r") as f:
         to_python = json.loads(f.read())
-        with open(os.path.join(os.getcwd(), 'databases/mega.csv'), 'w') as fcsv:
+        with open(path_database("mega.csv"), "w") as fcsv:
             fs = csv.writer(fcsv)
-            fs.writerow(['id', 'ticket', 'date', 'concurso', 'created_at'])
-            for i, data in enumerate(to_python['mega']):
+            fs.writerow(["id", "ticket", "date", "concurso", "created_at"])
+            for i, data in enumerate(to_python["mega"]):
                 fs.writerow(
                     [
                         i,
-                        data['content'],
-                        data['date'],
-                        data['concurso'],
-                        data['create_at']
+                        data["content"],
+                        data["date"],
+                        data["concurso"],
+                        data["create_at"],
                     ]
                 )
         fcsv.close()
@@ -55,7 +57,7 @@ def converte_json_to_csv():
 
 def removeLines(id_line):
     lines = list()
-    with open(pathDatabase('mega.csv'), 'r') as readFile:
+    with open(path_database("mega.csv"), "r") as readFile:
         reader = csv.reader(readFile)
         for row in reader:
             lines.append(row)
@@ -64,23 +66,22 @@ def removeLines(id_line):
                     lines.remove(row)
     readFile.close()
 
-    with open(pathDatabase('mega.csv'), 'w') as writeFile:
+    with open(path_database("mega.csv"), "w") as writeFile:
         writer = csv.writer(writeFile)
         writer.writerows(lines)
     writeFile.close()
 
 
 def writeTickets(payload_csv):
-    with open(pathDatabase('teste.csv'), 'rb') as readFile:
+    with open(path_database("teste.csv"), "rb") as readFile:
         lines = len(readFile.readlines())
-        with open(pathDatabase('teste.csv'), 'a') as writeFile:
+        with open(path_database("teste.csv"), "a") as writeFile:
             writer = csv.writer(writeFile)
             if lines > 0:
                 for row in payload_csv:
                     writer.writerow(row)
             else:
-                writer.writerow(
-                    ['id', 'ticket', 'date', 'concurso', 'created_at'])
+                writer.writerow(["id", "ticket", "date", "concurso", "created_at"])
                 for row in payload_csv:
                     writer.writerow(row)
 
@@ -88,11 +89,49 @@ def writeTickets(payload_csv):
     readFile.close()
 
 
-# for i in range(100000):
-#     accumulated.append([i, otherWayToGenerateArray(
-#         6), '2024', str(datetime.datetime.now())])
+def create_csv():
+    with open(path_database("teste.csv"), "rb") as readFile:
+        lines = len(readFile.readlines())
+        if lines > 1:
+            for i in range(10):
+                lines += 1
+                accumulated.append(
+                    [
+                        lines,
+                        otherWayToGenerateArray(6),
+                        "2020-11-05",
+                        "2024",
+                        str(datetime.datetime.now()),
+                    ]
+                )
+        else:
+            accumulated.append(
+                [
+                    lines,
+                    otherWayToGenerateArray(6),
+                    "2020-11-05",
+                    "2024",
+                    str(datetime.datetime.now()),
+                ]
+            )
+    readFile.close()
 
-base = pd.read_csv(pathDatabase('teste.csv'))
-# locate = base.loc[base.ticket == base.ticket]
 
-# print(locate)
+# create_csv()
+# print(accumulated)
+base = pd.read_csv(path_database("teste.csv"))
+previsores = base.iloc[:, 1:5].values
+encoder_previsores = LabelEncoder()
+previsores[:, 0] = encoder_previsores.fit_transform(previsores[:, 0])
+previsores[:, 1] = encoder_previsores.fit_transform(previsores[:, 1])
+previsores[:, 2] = encoder_previsores.fit_transform(previsores[:, 2])
+previsores[:, 3] = encoder_previsores.fit_transform(previsores[:, 3])
+
+onehotencoder = OneHotEncoder(categories='auto', sparse=False)
+previsores = onehotencoder.fit_transform(previsores)
+
+scaler = StandardScaler()
+previsores = scaler.fit_transform(previsores)
+# locate = base.loc[base.ticket]
+# writeTickets(accumulated)
+print(previsores)
