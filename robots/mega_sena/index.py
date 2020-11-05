@@ -10,10 +10,15 @@ import csv
 
 
 payload = {}
+accumulated = list()
+
+
+def pathDatabase(file):
+    return os.path.join(os.getcwd(), 'databases/' + file)
 
 
 def otherWayToGenerateArray(n):
-    arr = []
+    arr = list()
     for i in range(n):
         arr.append(generateNumber(1, 60, np.empty(n), i))
     return arr
@@ -48,19 +53,46 @@ def converte_json_to_csv():
     f.close()
 
 
-# df = pd.read_csv(os.path.join(os.getcwd(), 'databases/mega.csv'))
+def removeLines(id_line):
+    lines = list()
+    with open(pathDatabase('mega.csv'), 'r') as readFile:
+        reader = csv.reader(readFile)
+        for row in reader:
+            lines.append(row)
+            for field in row:
+                if field == str(id_line):
+                    lines.remove(row)
+    readFile.close()
 
-# with open(os.path.join(os.getcwd(), 'databases/mega.json'), 'r') as f:
-#     t = json.loads(f.read())
-#     teste = {'content': [0, 0, 0, 0, 0, 0],
-#              'date': '2020-11-03', 'concurso': '2024', 'created_at': str(datetime.datetime.now())}
+    with open(pathDatabase('mega.csv'), 'w') as writeFile:
+        writer = csv.writer(writeFile)
+        writer.writerows(lines)
+    writeFile.close()
 
-#     print('antes', len(t['mega']))
-#     t['mega'].append(teste)
-#     print('depois', len(t['mega']))
-#     print(t['mega'][-1])
-# f.close()
 
-with open(os.path.join(os.getcwd(), 'databases/mega.csv'), 'r') as f:
-    print(f.read())
-    f.close()
+def writeTickets(payload_csv):
+    with open(pathDatabase('teste.csv'), 'rb') as readFile:
+        lines = len(readFile.readlines())
+        with open(pathDatabase('teste.csv'), 'a') as writeFile:
+            writer = csv.writer(writeFile)
+            if lines > 0:
+                for row in payload_csv:
+                    writer.writerow(row)
+            else:
+                writer.writerow(
+                    ['id', 'ticket', 'date', 'concurso', 'created_at'])
+                for row in payload_csv:
+                    writer.writerow(row)
+
+        writeFile.close()
+    readFile.close()
+
+
+# for i in range(100000):
+#     accumulated.append([i, otherWayToGenerateArray(
+#         6), '2024', str(datetime.datetime.now())])
+
+base = pd.read_csv(pathDatabase('teste.csv'))
+# locate = base.loc[base.ticket == base.ticket]
+
+# print(locate)

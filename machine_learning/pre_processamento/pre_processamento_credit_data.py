@@ -68,6 +68,6 @@ Escalonamento de atributos
 Padronização (standardisation) x = x-média(x)/desvio_padrão(x)
 Normalização (normalization) x = x-mínimo(x)/máximo(x)-mínimo(x)
 """
-scaler = StandardScaler()
-previsores = base.iloc[:, 1:4].values
-previsores = scaler.fit_transform(previsores)
+# scaler = StandardScaler()
+# previsores = base.iloc[:, 1:4].values
+# previsores = scaler.fit_transform(previsores)

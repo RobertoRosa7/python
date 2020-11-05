@@ -17,3 +17,9 @@
 - Tratamento de valores inconsistentes
 - Tratamento de valores faltantes
 - Escalonamento de atributos
+- Base de dados do censo
+- Transformação de variáveis categóricas
+
+###### 05/11/2020
+
+- Avaliação de algoritmos
