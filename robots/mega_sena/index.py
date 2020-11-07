@@ -2,6 +2,7 @@
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
 import datetime
@@ -13,6 +14,11 @@ import csv
 
 payload = {}
 accumulated = list()
+
+
+def debug(**Kwargs):
+    for key, value in Kwargs.items():
+        print("key %s, value %s" % (key, value))
 
 
 def path_database(file):
@@ -127,11 +133,22 @@ previsores[:, 1] = encoder_previsores.fit_transform(previsores[:, 1])
 previsores[:, 2] = encoder_previsores.fit_transform(previsores[:, 2])
 previsores[:, 3] = encoder_previsores.fit_transform(previsores[:, 3])
 
-onehotencoder = OneHotEncoder(categories='auto', sparse=False)
+onehotencoder = OneHotEncoder(categories="auto", sparse=False)
 previsores = onehotencoder.fit_transform(previsores)
 
 scaler = StandardScaler()
 previsores = scaler.fit_transform(previsores)
 # locate = base.loc[base.ticket]
 # writeTickets(accumulated)
-print(previsores)
+previsores_training, previsores_test = train_test_split(
+    previsores, test_size=0.25, random_state=0
+)
+
+
+# debug(
+#     size_total=len(previsores),
+#     size_training=len(previsores_training),
+#     size_test=len(previsores_test),
+# )
+# debug(previsores=previsores[:, 0:3])
+print(pd.DataFrame(previsores))

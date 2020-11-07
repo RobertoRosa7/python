@@ -24,3 +24,18 @@
 
 - Avaliação de algoritmos
 - Divisão das bases de dados em treinamento e teste
+
+
+### Aprendizagem Bayesiana
+  - Naive bayes introdução
+  - Naive bayes aprendizagem
+  - Naive bayes classificação
+  - Naive bayes correção laplaciana - corrigir valor com zero necessario adicionar um novo registro para fazer calculo
+  - Naiva bayes com Scikit-learn
+  - Calculo Risco Alto: `P(alto) = 6/14 * 1/6 * 4/6 * 6/6 * 1/6` resultado: 0,0079
+  - Calculo Risco Moderado: `M(moderado) = 3/14 * 1/3 * 1/3 * 2/3 * 1/3` resultado: 0,0052
+  - Calculo Risco Baixo: `B(baixo) = 5/14 * 3/5 * 2/5 * 3/5 * 5/5` resultado: 0,0514
+  - Calculo Porcentagem: `Soma(0,0079 + 0,0052 + 0,0514)` resultado: 0,0645 equivale a 100%
+  - Calculo Porcentagem Risco alto: `0,0079 / 0,0645 * 100 = 12,24%`
+  - Calculo Porcentagem Moderado: `0,0052 / 0,0645 * 100 = 8,06%`
+  - Calculo Porcentagem Baixo: `0,0514 / 0,0645 * 100 = 79,68%`
