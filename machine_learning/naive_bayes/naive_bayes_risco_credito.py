@@ -4,11 +4,11 @@ from sklearn.naive_bayes import GaussianNB
 import os, sys
 import pandas as pd
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 def path_database(filename):
-    return os.path.join(os.getcwd(), "databases/" + filename)
+    # return os.path.join(os.getcwd(), "databases/" + filename)
+    return os.path.join(os.path.dirname(__file__), "../../databases/" + filename)
 
 
 base = pd.read_csv(path_database("risco_credito.csv"))

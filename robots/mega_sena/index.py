@@ -1,28 +1,31 @@
 # -*- coding: utf-8 -*-
+import os, sys
+
+sys.path.append(os.path.abspath(os.getcwd()))
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from utils.formats import Formats
 import numpy as np
 import pandas as pd
 import datetime
 import random
 import math
-import os
 import json
 import csv
 
 payload = {}
 accumulated = list()
-
+formats = Formats()
 
 def debug(**Kwargs):
     for key, value in Kwargs.items():
         print("key %s, value %s" % (key, value))
 
 
-def path_database(file):
-    return os.path.join(os.getcwd(), "databases/" + file)
+# def path_database(file):
+#     return os.path.join(os.getcwd(), "databases/" + file)
 
 
 def otherWayToGenerateArray(n):
@@ -42,9 +45,9 @@ def converte_json_to_csv():
     # djson = pd.read_json(os.path.join(os.getcwd(), 'databases/mega.json'))
     # dataCsv = dataJson.to_csv(os.path.join(os.getcwd(), 'databases/mega.csv'), index=None)
 
-    with open(path_database("mega.json"), "r") as f:
+    with open(formats.path_database("mega.json"), "r") as f:
         to_python = json.loads(f.read())
-        with open(path_database("mega.csv"), "w") as fcsv:
+        with open(formats.path_database("mega.csv"), "w") as fcsv:
             fs = csv.writer(fcsv)
             fs.writerow(["id", "ticket", "date", "concurso", "created_at"])
             for i, data in enumerate(to_python["mega"]):
@@ -63,7 +66,7 @@ def converte_json_to_csv():
 
 def removeLines(id_line):
     lines = list()
-    with open(path_database("mega.csv"), "r") as readFile:
+    with open(formats.path_database("mega.csv"), "r") as readFile:
         reader = csv.reader(readFile)
         for row in reader:
             lines.append(row)
@@ -72,16 +75,16 @@ def removeLines(id_line):
                     lines.remove(row)
     readFile.close()
 
-    with open(path_database("mega.csv"), "w") as writeFile:
+    with open(formats.path_database("mega.csv"), "w") as writeFile:
         writer = csv.writer(writeFile)
         writer.writerows(lines)
     writeFile.close()
 
 
 def writeTickets(payload_csv):
-    with open(path_database("teste.csv"), "rb") as readFile:
+    with open(formats.path_database("teste.csv"), "rb") as readFile:
         lines = len(readFile.readlines())
-        with open(path_database("teste.csv"), "a") as writeFile:
+        with open(formats.path_database("teste.csv"), "a") as writeFile:
             writer = csv.writer(writeFile)
             if lines > 0:
                 for row in payload_csv:
@@ -96,7 +99,7 @@ def writeTickets(payload_csv):
 
 
 def create_csv():
-    with open(path_database("teste.csv"), "rb") as readFile:
+    with open(formats.path_database("teste.csv"), "rb") as readFile:
         lines = len(readFile.readlines())
         if lines > 1:
             for i in range(10):
@@ -125,7 +128,7 @@ def create_csv():
 
 # create_csv()
 # print(accumulated)
-base = pd.read_csv(path_database("teste.csv"))
+base = pd.read_csv(formats.path_database("teste.csv"))
 previsores = base.iloc[:, 1:5].values
 encoder_previsores = LabelEncoder()
 previsores[:, 0] = encoder_previsores.fit_transform(previsores[:, 0])
