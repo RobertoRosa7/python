@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import os, sys
+import numpy as np
 
 sys.path.append(os.path.abspath(os.getcwd()))
 
@@ -11,6 +12,9 @@ from flask_script import Manager, Server
 from flask import Blueprint
 from flask import make_response
 from utils.formats import Formats
+from machine_learning.naive_bayes.naive_bayes_risco_credito import classificador
+from machine_learning.server.app.pages.home.home import home2
+from machine_learning.server.routes.routes import home_app, naive_bayes_risco_credito
 
 # db = MongoEngine()
 
@@ -23,23 +27,10 @@ app.config.update()
 # set db
 # db.init_app(app)
 
-# import blueprints
-# from home.views import home_app
-# from pet.views import pet_app
-# from app.pages.home import home
-
-home_app = Blueprint("home_app", __name__)
-
-
-@home_app.route("/", methods=["GET"])
-def home():
-    formats = Formats()
-    return json_response(formats.convert_csv_to_json(formats.path_database("risco_credito.csv")))
-
-
 # register blueprints
 app.register_blueprint(home_app)
-# app.register_blueprint(pet_app)
+app.register_blueprint(naive_bayes_risco_credito)
+app.register_blueprint(home2)
 
 manager = Manager(app)
 
@@ -53,12 +44,6 @@ manager.add_command(
         port=int(os.getenv("PORT", 3000)),
     ),
 )
-
-
-def json_response(obj, status_code=200, cls=None):
-    response = make_response(json.dumps(obj, cls=cls), status_code)
-    response.content_type = "application/json"
-    return response
 
 
 if __name__ == "__main__":
