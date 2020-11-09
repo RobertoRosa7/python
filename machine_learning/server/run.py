@@ -20,9 +20,9 @@ app.config.update()
 # import blueprints
 # from home.views import home_app
 # from pet.views import pet_app
+# from app.pages.home import home
 
 home_app = Blueprint("home_app", __name__)
-
 
 @home_app.route("/")
 def home():

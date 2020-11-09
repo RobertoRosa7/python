@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from sklearn.preprocessing import LabelEncoder
 from sklearn.naive_bayes import GaussianNB
-import os
+import os, sys
 import pandas as pd
-from utils.formats import Formats
 
-print(Formats)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 
 def path_database(filename):
     return os.path.join(os.getcwd(), "databases/" + filename)
