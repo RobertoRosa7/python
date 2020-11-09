@@ -20,4 +20,4 @@ def home():
 @naive_bayes_risco_credito.route("/naive_bayes_risco_credito", methods=["GET"])
 def fn_naive_bayes_risco_credito():
     formats = Formats()
-    return formats.json_response({"classe": list(classificador())})
+    return formats.json_response({"classification": list(classificador())})

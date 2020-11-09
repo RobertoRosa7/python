@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score
 import pandas as pd
 import numpy as np
 import os
@@ -30,4 +33,18 @@ scaler = StandardScaler()
 # tratando padronização
 previsores = scaler.fit_transform(previsores)
 
-print(pd.DataFrame(previsores))
+(
+    previsores_trainamento,
+    previsores_teste,
+    classe_treinamento,
+    classe_teste,
+) = train_test_split(previsores, classe, test_size=0.25, random_state=0)
+
+classificador = GaussianNB()
+classificador = classificador.fit(previsores_trainamento, classe_treinamento)
+previsoes = classificador.predict(previsores_teste)
+precisao = accuracy_score(classe_teste, previsoes)
+matriz = confusion_matrix(classe_teste, previsoes)
+
+# print(precisao) # percentual de acerto comparando classe_teste mais previsoes
+print(pd.DataFrame(matriz))

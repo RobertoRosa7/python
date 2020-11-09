@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 import os, sys
-
-sys.path.append(os.path.abspath(os.getcwd()))
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from utils.formats import Formats
 import numpy as np
 import pandas as pd
 import datetime
@@ -14,6 +7,15 @@ import random
 import math
 import json
 import csv
+
+sys.path.append(os.path.abspath(os.getcwd()))
+
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from utils.formats import Formats
+
 
 payload = {}
 accumulated = list()
@@ -137,17 +139,17 @@ previsores[:, 1] = encoder_previsores.fit_transform(previsores[:, 1])
 previsores[:, 2] = encoder_previsores.fit_transform(previsores[:, 2])
 previsores[:, 3] = encoder_previsores.fit_transform(previsores[:, 3])
 
+# converter variaveis do tipo categorico nominal em numbers
 onehotencoder = OneHotEncoder(categories="auto", sparse=False)
 previsores = onehotencoder.fit_transform(previsores)
 
-scaler = StandardScaler()
-previsores = scaler.fit_transform(previsores)
+# scaler = StandardScaler()
+# previsores = scaler.fit_transform(previsores)
 # locate = base.loc[base.ticket]
 # writeTickets(accumulated)
-previsores_training, previsores_test = train_test_split(
-    previsores, test_size=0.25, random_state=0
-)
-
+# previsores_training, previsores_test = train_test_split(
+#     previsores, test_size=0.25, random_state=0
+# )
 
 # debug(
 #     size_total=len(previsores),

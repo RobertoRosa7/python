@@ -9,10 +9,6 @@ from flask import Flask
 
 # from flask_mongoengine import MongoEngine
 from flask_script import Manager, Server
-from flask import Blueprint
-from flask import make_response
-from utils.formats import Formats
-from machine_learning.naive_bayes.naive_bayes_risco_credito import classificador
 from machine_learning.server.app.pages.home.home import home2
 from machine_learning.server.routes.routes import home_app, naive_bayes_risco_credito
 

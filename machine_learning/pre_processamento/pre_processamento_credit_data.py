@@ -10,11 +10,11 @@ import os
 
 def debug(**Kwargs):
     for key, value in Kwargs.items():
-        print('key %s, value %s' % (key, value))
+        print("key %s, value %s" % (key, value))
 
 
 def path_databases(filename):
-    return os.path.join(os.getcwd(), 'databases/' + filename)
+    return os.path.join(os.getcwd(), "databases/" + filename)
 
 
 """
@@ -80,22 +80,30 @@ Normalização (normalization) x = x-mínimo(x)/máximo(x)-mínimo(x)
 """
 Divisão das bases de dados de treinamento e teste
 """
-base = pd.read_csv(path_databases('credit_data.csv'))
-base.loc[base.age < 0, 'age'] = 40.92
+base = pd.read_csv(path_databases("credit_data.csv"))
+base.loc[base.age < 0, "age"] = 40.92
 
 previsores = base.iloc[:, 1:4].values
 classe = base.iloc[:, 4].values
 
-imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
+imputer = SimpleImputer(missing_values=np.nan, strategy="mean")
 imputer = imputer.fit(previsores[:, 1:4])
 previsores[:, 1:4] = imputer.transform(previsores[:, 1:4])
 
 scaler = StandardScaler()
 previsores = scaler.fit_transform(previsores)
 
-previsores_trainamento, previsores_teste, classe_treinamento, classe_teste = train_test_split(
-    previsores, classe, test_size=0.25, random_state=0)
+(
+    previsores_trainamento,
+    previsores_teste,
+    classe_treinamento,
+    classe_teste,
+) = train_test_split(previsores, classe, test_size=0.25, random_state=0)
 
 
-debug(previsores_trei=previsores_trainamento, previsores_test=previsores_teste,
-      classe_trei=classe_treinamento, classe_test=classe_teste)
+debug(
+    previsores_trei=previsores_trainamento,
+    previsores_test=previsores_teste,
+    classe_trei=classe_treinamento,
+    classe_test=classe_teste,
+)
