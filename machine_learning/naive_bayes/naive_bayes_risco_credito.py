@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
+import os, sys
+
+sys.path.append(os.path.abspath(os.getcwd()))
 from sklearn.preprocessing import LabelEncoder
 from sklearn.naive_bayes import GaussianNB
-import os, sys
+from utils.formats import Formats
+
 import pandas as pd
-
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-def path_database(filename):
-    # return os.path.join(os.getcwd(), "databases/" + filename)
-    return os.path.join(os.path.dirname(__file__), "../../databases/" + filename)
+formats = Formats()
 
 
-base = pd.read_csv(path_database("risco_credito.csv"))
+base = pd.read_csv(formats.path_database("risco_credito.csv"))
 previsores = base.iloc[:, 0:4].values
 classe = base.iloc[:, 4].values
 

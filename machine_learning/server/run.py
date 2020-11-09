@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
+import json
 import os, sys
+
+sys.path.append(os.path.abspath(os.getcwd()))
+
 from flask import Flask
+
 # from flask_mongoengine import MongoEngine
 from flask_script import Manager, Server
 from flask import Blueprint
+from flask import make_response
+from utils.formats import Formats
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 # db = MongoEngine()
 
 app = Flask(__name__)
@@ -24,9 +30,11 @@ app.config.update()
 
 home_app = Blueprint("home_app", __name__)
 
-@home_app.route("/")
+
+@home_app.route("/", methods=["GET"])
 def home():
-    return "Hello World my first API"
+    formats = Formats()
+    return json_response(formats.convert_csv_to_json(formats.path_database("risco_credito.csv")))
 
 
 # register blueprints
@@ -45,6 +53,13 @@ manager.add_command(
         port=int(os.getenv("PORT", 3000)),
     ),
 )
+
+
+def json_response(obj, status_code=200, cls=None):
+    response = make_response(json.dumps(obj, cls=cls), status_code)
+    response.content_type = "application/json"
+    return response
+
 
 if __name__ == "__main__":
     manager.run()

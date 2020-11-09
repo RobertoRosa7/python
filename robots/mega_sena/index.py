@@ -19,6 +19,7 @@ payload = {}
 accumulated = list()
 formats = Formats()
 
+
 def debug(**Kwargs):
     for key, value in Kwargs.items():
         print("key %s, value %s" % (key, value))
@@ -154,4 +155,5 @@ previsores_training, previsores_test = train_test_split(
 #     size_test=len(previsores_test),
 # )
 # debug(previsores=previsores[:, 0:3])
-print(pd.DataFrame(previsores))
+# print(pd.DataFrame(previsores))
+# print(formats.convert_csv_to_json(formats.path_database("teste.csv")))
