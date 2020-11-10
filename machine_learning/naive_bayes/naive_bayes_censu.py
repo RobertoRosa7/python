@@ -47,15 +47,15 @@ classe = labelencoder_classe.fit_transform(classe)
 # scaler = StandardScaler()
 # previsores = scaler.fit_transform(previsores)
 
-previsores_trei, previsores_test, classe_trei, classe_test = train_test_split(
+previsores_treinamento, previsores_teste, classe_treinamento, classe_teste = train_test_split(
     previsores, classe, test_size=0.15, random_state=0
 )
 
 classificador = GaussianNB()
-classificador = classificador.fit(previsores_trei, classe_trei)
-previsoes = classificador.predict(previsores_test)
-precisao = accuracy_score(classe_test, previsoes)
-matriz = confusion_matrix(classe_test, previsoes)
+classificador = classificador.fit(previsores_treinamento, classe_treinamento)
+previsoes = classificador.predict(previsores_teste)
+precisao = accuracy_score(classe_teste, previsoes)
+matriz = confusion_matrix(classe_teste, previsoes)
 
 print(precisao) # percentual de acerto comparando classe_teste mais previsoes
 # print(pd.DataFrame(matriz))

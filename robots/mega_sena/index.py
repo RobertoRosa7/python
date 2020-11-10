@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-import os, sys
+import os, sys, re
 import numpy as np
+from numpy.lib.function_base import delete
 import pandas as pd
-import datetime
-import random
-import math
 import json
 import csv
 
@@ -15,32 +13,12 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from utils.formats import Formats
-
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score
 
 payload = {}
 accumulated = list()
 formats = Formats()
-
-
-def debug(**Kwargs):
-    for key, value in Kwargs.items():
-        print("key %s, value %s" % (key, value))
-
-
-# def path_database(file):
-#     return os.path.join(os.getcwd(), "databases/" + file)
-
-
-def otherWayToGenerateArray(n):
-    arr = list()
-    for i in range(n):
-        arr.append(generateNumber(1, 60, np.empty(n), i))
-    return arr
-
-
-def generateNumber(min=1, max=60, array=[], index=0):
-    rand = math.ceil(random.randint(min, max))
-    return generateNumber(min, max, array) if rand in array else rand
 
 
 def converte_json_to_csv():
@@ -93,69 +71,109 @@ def writeTickets(payload_csv):
                 for row in payload_csv:
                     writer.writerow(row)
             else:
-                writer.writerow(["id", "ticket", "date", "concurso", "created_at"])
+                writer.writerow(
+                    ["id", "ticket", "date", "concurso", "created_at", "repeated"]
+                )
                 for row in payload_csv:
                     writer.writerow(row)
 
         writeFile.close()
     readFile.close()
+    print("Done!")
 
 
-def create_csv():
-    with open(formats.path_database("teste.csv"), "rb") as readFile:
-        lines = len(readFile.readlines())
-        if lines > 1:
-            for i in range(10):
-                lines += 1
-                accumulated.append(
-                    [
-                        lines,
-                        otherWayToGenerateArray(6),
-                        "2020-11-05",
-                        "2024",
-                        str(datetime.datetime.now()),
-                    ]
-                )
-        else:
-            accumulated.append(
-                [
-                    lines,
-                    otherWayToGenerateArray(6),
-                    "2020-11-05",
-                    "2024",
-                    str(datetime.datetime.now()),
+def update_csv_file():
+    print("updating...")
+    temp = list()
+    array = list()
+    new_array = list()
+
+    with open(formats.path_database("teste.csv"), "r") as rf:
+        for row in rf:
+            find = formats.find_ticket(row)
+            for i in find:
+                repeated = formats.check_list_csv_repeated("teste.csv")
+                array = np.asarray_chkfinite(i)
+                for r in repeated:
+                    if r == i:
+                        row = row.replace("not_repeated", "repeated")
+            te = formats.remove_ticket(row)
+            if not te.startswith("id"):
+                new_array = [
+                    int(te.split(",")[0]),
+                    [int(x) for x in list(array)],
+                    te.split(",")[2],
+                    te.split(",")[3],
+                    te.split(",")[4],
+                    te.split(",")[5].strip(),
                 ]
-            )
-    readFile.close()
+            else:
+                new_array = [
+                    te.split(",")[0],
+                    te.split(",")[1],
+                    te.split(",")[2],
+                    te.split(",")[3],
+                    te.split(",")[4],
+                    te.split(",")[5].strip(),
+                ]
+            temp.append(new_array)
+    rf.close()
+    with open(formats.path_database("teste.csv"), "w") as wf:
+        writer = csv.writer(wf)
+        writer.writerows(temp)
+    wf.close()
+    print("Done...")
 
 
-# create_csv()
-# print(accumulated)
-base = pd.read_csv(formats.path_database("teste.csv"))
-previsores = base.iloc[:, 1:5].values
-encoder_previsores = LabelEncoder()
-previsores[:, 0] = encoder_previsores.fit_transform(previsores[:, 0])
-previsores[:, 1] = encoder_previsores.fit_transform(previsores[:, 1])
-previsores[:, 2] = encoder_previsores.fit_transform(previsores[:, 2])
-previsores[:, 3] = encoder_previsores.fit_transform(previsores[:, 3])
+def classification():
+    base = pd.read_csv(formats.path_database("teste.csv"))
+    
+    print(base.loc[base.repeated == 'repeated'])
 
-# converter variaveis do tipo categorico nominal em numbers
-onehotencoder = OneHotEncoder(categories="auto", sparse=False)
-previsores = onehotencoder.fit_transform(previsores)
+    previsores = base.iloc[:, 1:5].values
+    classe = base.iloc[:, 5].values
 
-# scaler = StandardScaler()
-# previsores = scaler.fit_transform(previsores)
-# locate = base.loc[base.ticket]
-# writeTickets(accumulated)
-# previsores_training, previsores_test = train_test_split(
-#     previsores, test_size=0.25, random_state=0
-# )
+    encoder_previsores = LabelEncoder()
+    previsores[:, 0] = encoder_previsores.fit_transform(previsores[:, 0])
+    previsores[:, 1] = encoder_previsores.fit_transform(previsores[:, 1])
+    previsores[:, 2] = encoder_previsores.fit_transform(previsores[:, 2])
+    previsores[:, 3] = encoder_previsores.fit_transform(previsores[:, 3])
 
-# debug(
-#     size_total=len(previsores),
-#     size_training=len(previsores_training),
-#     size_test=len(previsores_test),
-# )
-# debug(previsores=previsores[:, 0:3])
-# print(pd.DataFrame(previsores))
-# print(formats.convert_csv_to_json(formats.path_database("teste.csv")))
+    # encoder_classe = LabelEncoder()
+    # classe = encoder_classe.fit_transform(classe)
+
+    # converter variaveis do tipo categorico nominal em numbers - dump
+    # onehotencoder = OneHotEncoder(categories="auto", sparse=False)
+    # previsores = onehotencoder.fit_transform(previsores)
+
+    # scaler = StandardScaler()
+    # previsores = scaler.fit_transform(previsores)
+
+    (
+        previsores_treinamento,
+        previsores_teste,
+        classe_treinamento,
+        classe_teste,
+    ) = train_test_split(previsores, classe, test_size=0.25, random_state=0)
+
+    # formats.debug(
+    #     size_total=len(previsores),
+    #     size_treinamento=len(previsores_treinamento),
+    #     size_test=len(previsores_test),
+    # )
+
+    classificador = GaussianNB()
+    classificador = classificador.fit(previsores, classe)
+    previsoes = classificador.predict(previsores_teste)
+    precisao = accuracy_score(classe_teste, previsoes)
+    matriz = confusion_matrix(classe_teste, previsoes)
+
+    # debug(previsores=previsores[:, 0:3])
+    # print(pd.DataFrame(previsores))
+    # print(formats.convert_csv_to_json(formats.path_database("teste.csv")))
+
+    # print(pd.DataFrame(previsoes))
+
+# update_csv_file()
+# writeTickets(formats.create_payload_to_csv(1000))
+classification()
