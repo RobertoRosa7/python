@@ -15,6 +15,7 @@ from sklearn.model_selection import train_test_split
 from utils.formats import Formats
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.impute import SimpleImputer
 
 payload = {}
 accumulated = list()
@@ -127,8 +128,8 @@ def update_csv_file():
 
 def classification():
     base = pd.read_csv(formats.path_database("teste.csv"))
-    
-    print(base.loc[base.repeated == 'repeated'])
+
+    print(base.loc[base.repeated == "repeated"])
 
     previsores = base.iloc[:, 1:5].values
     classe = base.iloc[:, 5].values
@@ -174,6 +175,28 @@ def classification():
 
     # print(pd.DataFrame(previsoes))
 
+
+def numbersMostRepeated():
+    matrix = list()
+    with open(formats.path_database("teste.csv"), "r") as rfile:
+        for row in rfile:
+            numExtracted = formats.find_ticket(row)
+            for i in numExtracted:
+                arr = [int(x) for x in list(np.asarray_chkfinite(i))]
+                matrix.append(arr)
+    rfile.close()
+    df = pd.DataFrame(matrix)
+    imputer = SimpleImputer(missing_values=np.nan, strategy="mean")
+    imputer = imputer.fit(df)
+    df = imputer.transform(df)
+    df = pd.DataFrame(df)
+    for c in df.columns:
+        columns = df[c].value_counts(normalize=False, sort=True, ascending=False).head(6)
+        print([int(x) for x in list(columns.index)])
+
+
+# area de chamadas das funções
 # update_csv_file()
-# writeTickets(formats.create_payload_to_csv(1000))
-classification()
+writeTickets(formats.create_payload_to_csv(100000))
+# classification()
+# numbersMostRepeated()

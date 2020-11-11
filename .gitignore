@@ -1,2 +1,5 @@
 *.db
 *.txt
+*.csv
+.DS_STORE
+/databases
