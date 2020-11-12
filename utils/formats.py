@@ -67,6 +67,7 @@ class Formats:
         return self.generateNumber(min, max, array) if rand in array else rand
 
     def create_payload_model_mega(self, qtd, filename="mega.csv"):
+        print("Start up...!")
         accumated = list()
         with open(self.path_database(filename), "rb") as readFile:
             lines = len(readFile.readlines())
