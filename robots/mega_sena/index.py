@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import os, sys, re
 import numpy as np
-from numpy.lib.function_base import delete
 import pandas as pd
 import json
 import csv
+import missingno as msno
+from tensorflow import keras
 
 sys.path.append(os.path.abspath(os.getcwd()))
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
@@ -16,6 +18,8 @@ from utils.formats import Formats
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.impute import SimpleImputer
+from keras.models import Sequential
+from keras.layers import Dense
 
 payload = {}
 accumulated = list()
@@ -185,18 +189,114 @@ def numbersMostRepeated():
                 arr = [int(x) for x in list(np.asarray_chkfinite(i))]
                 matrix.append(arr)
     rfile.close()
-    df = pd.DataFrame(matrix)
+    df = pd.DataFrame(
+        matrix, columns=["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
+    )
     imputer = SimpleImputer(missing_values=np.nan, strategy="mean")
     imputer = imputer.fit(df)
     df = imputer.transform(df)
-    df = pd.DataFrame(df)
-    for c in df.columns:
-        columns = df[c].value_counts(normalize=False, sort=True, ascending=False).head(6)
-        print([int(x) for x in list(columns.index)])
+    df = pd.DataFrame(
+        df, columns=["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
+    )
+    # for c in df.columns:
+    #     columns = (
+    #         df[c].value_counts(normalize=False, sort=True, ascending=False).head(6)
+    #     )
+    #     print([int(x) for x in list(columns.index)])
+
+    """
+      as seis dezendas mais sorteadas
+    """
+    dezenas = pd.DataFrame(
+        df["bola 1"].tolist()
+        + df["bola 2"].tolist()
+        + df["bola 3"].tolist()
+        + df["bola 4"].tolist()
+        + df["bola 5"].tolist()
+        + df["bola 6"].tolist(),
+        columns=["numbers"],
+    )
+    col = dezenas["numbers"].value_counts().sort_values(ascending=True).head(6)
+    print(list(col.index))
+
+
+def megaSenaResults():
+    df = pd.read_excel(formats.path_database("mega_sena_resultados.xlsx"))
+    df.columns = map(str.lower, df.columns)  # tolowercase columns
+
+    """
+      conversão de datatime
+    """
+    # df["data_datetime"] = pd.to_datetime(df.iloc[:, 1])
+    # df["day"] = df.data_datetime.dt.day
+    # df["month"] = df.data_datetime.dt.month
+    # df["year"] = df.data_datetime.dt.year
+
+    # print(df.shape) # (2322 lines, 8 columns)
+    # print(df.dtypes) # show type of variables
+
+    """
+      fazendo higienização dataframe
+    """
+    # msno.matrix(
+    #     df=df.iloc[:, 0 : df.shape[1]], figsize=(20, 5), color=(0.42, 0.1, 0.05)
+    # )
+
+    """
+      verificando se alguma resultado repetido
+    """
+    df.groupby(
+        ["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
+    ).size().sort_values(ascending=False)
+
+    """
+      as seis dezendas mais sorteadas
+    """
+    dezenas = pd.DataFrame(
+        df["bola 1"].tolist()
+        + df["bola 2"].tolist()
+        + df["bola 3"].tolist()
+        + df["bola 4"].tolist()
+        + df["bola 5"].tolist()
+        + df["bola 6"].tolist(),
+        columns=["numbers"],
+    )
+    col = dezenas["numbers"].value_counts().sort_values(ascending=True).head(6)
+
+    # np.random.SeedSequence(8)
+    previsores = df.iloc[:, 0:6]
+    classe = df.iloc[:, 6]
+
+    (
+        previsores_treinamento,
+        previsores_teste,
+        classe_treinamento,
+        classe_teste,
+    ) = train_test_split(previsores, classe, test_size=0.33, random_state=8)
+
+    # criando modelo
+    modelo = Sequential()
+    modelo.add(Dense(10, input_dim=6, activation="relu"))
+    modelo.add(Dense(12, activation="relu"))
+    modelo.add(Dense(1, activation="sigmoid"))
+
+    # compilando modelo
+    modelo.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+
+    # treinando modelo
+    # modelo.fit(previsores_treinamento, classe_treinamento)
+    # validando modelo
+    # scores = modelo.evaluate(classe_teste, previsores_teste)
+    # print((modelo.metrics_names[1], scores[1] * 100))
+
+    print(
+       previsores_teste
+    )
 
 
 # area de chamadas das funções
 # update_csv_file()
-writeTickets(formats.create_payload_to_csv(100000))
+# writeTickets(formats.create_payload_to_csv(100000))
 # classification()
 # numbersMostRepeated()
+megaSenaResults()
