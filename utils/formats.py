@@ -57,6 +57,7 @@ class Formats:
 
     def otherWayToGenerateArray(self, n):
         arr = list()
+        arr.append(str(datetime.datetime.today().isoformat())[0:10])
         for i in range(n):
             arr.append(self.generateNumber(1, 60, np.empty(n), i))
         return arr
@@ -65,33 +66,14 @@ class Formats:
         rand = math.ceil(random.randint(min, max))
         return self.generateNumber(min, max, array) if rand in array else rand
 
-    def create_payload_to_csv(self, qtd, filename="teste.csv"):
-        accumulated = list()
+    def create_payload_model_mega(self, qtd, filename="mega.csv"):
+        accumated = list()
         with open(self.path_database(filename), "rb") as readFile:
             lines = len(readFile.readlines())
             if lines > 1:
                 for i in range(qtd):
-                    lines += 1
-                    accumulated.append(
-                        [
-                            lines,
-                            self.otherWayToGenerateArray(6),
-                            "2020-11-05",
-                            "2024",
-                            str(datetime.datetime.now()),
-                            "not_repeated",
-                        ]
-                    )
+                    accumated.append(self.otherWayToGenerateArray(6))
             else:
-                accumulated.append(
-                    [
-                        lines,
-                        self.otherWayToGenerateArray(6),
-                        "2020-11-05",
-                        "2024",
-                        str(datetime.datetime.now()),
-                        "not_repeated",
-                    ]
-                )
+                accumated.append(self.otherWayToGenerateArray(6))
         readFile.close()
-        return accumulated
+        return accumated

@@ -4,8 +4,7 @@ import numpy as np
 import pandas as pd
 import json
 import csv
-import missingno as msno
-from tensorflow import keras
+import random
 
 sys.path.append(os.path.abspath(os.getcwd()))
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -20,6 +19,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.impute import SimpleImputer
 from keras.models import Sequential
 from keras.layers import Dense
+from tensorflow import keras
 
 payload = {}
 accumulated = list()
@@ -67,157 +67,21 @@ def removeLines(id_line):
     writeFile.close()
 
 
-def writeTickets(payload_csv):
-    with open(formats.path_database("teste.csv"), "rb") as readFile:
+def create_csv_mega(payload):
+    with open(formats.path_database("mega.csv"), "rb") as readFile:
         lines = len(readFile.readlines())
-        with open(formats.path_database("teste.csv"), "a") as writeFile:
+        with open(formats.path_database("mega.csv"), "a") as writeFile:
             writer = csv.writer(writeFile)
             if lines > 0:
-                for row in payload_csv:
-                    writer.writerow(row)
+                writer.writerows(payload)
             else:
                 writer.writerow(
-                    ["id", "ticket", "date", "concurso", "created_at", "repeated"]
+                    ["data", "bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
                 )
-                for row in payload_csv:
-                    writer.writerow(row)
-
+                writer.writerows(payload)
         writeFile.close()
     readFile.close()
     print("Done!")
-
-
-def update_csv_file():
-    print("updating...")
-    temp = list()
-    array = list()
-    new_array = list()
-
-    with open(formats.path_database("teste.csv"), "r") as rf:
-        for row in rf:
-            find = formats.find_ticket(row)
-            for i in find:
-                repeated = formats.check_list_csv_repeated("teste.csv")
-                array = np.asarray_chkfinite(i)
-                for r in repeated:
-                    if r == i:
-                        row = row.replace("not_repeated", "repeated")
-            te = formats.remove_ticket(row)
-            if not te.startswith("id"):
-                new_array = [
-                    int(te.split(",")[0]),
-                    [int(x) for x in list(array)],
-                    te.split(",")[2],
-                    te.split(",")[3],
-                    te.split(",")[4],
-                    te.split(",")[5].strip(),
-                ]
-            else:
-                new_array = [
-                    te.split(",")[0],
-                    te.split(",")[1],
-                    te.split(",")[2],
-                    te.split(",")[3],
-                    te.split(",")[4],
-                    te.split(",")[5].strip(),
-                ]
-            temp.append(new_array)
-    rf.close()
-    with open(formats.path_database("teste.csv"), "w") as wf:
-        writer = csv.writer(wf)
-        writer.writerows(temp)
-    wf.close()
-    print("Done...")
-
-
-def classification():
-    base = pd.read_csv(formats.path_database("teste.csv"))
-
-    print(base.loc[base.repeated == "repeated"])
-
-    previsores = base.iloc[:, 1:5].values
-    classe = base.iloc[:, 5].values
-
-    encoder_previsores = LabelEncoder()
-    previsores[:, 0] = encoder_previsores.fit_transform(previsores[:, 0])
-    previsores[:, 1] = encoder_previsores.fit_transform(previsores[:, 1])
-    previsores[:, 2] = encoder_previsores.fit_transform(previsores[:, 2])
-    previsores[:, 3] = encoder_previsores.fit_transform(previsores[:, 3])
-
-    # encoder_classe = LabelEncoder()
-    # classe = encoder_classe.fit_transform(classe)
-
-    # converter variaveis do tipo categorico nominal em numbers - dump
-    # onehotencoder = OneHotEncoder(categories="auto", sparse=False)
-    # previsores = onehotencoder.fit_transform(previsores)
-
-    # scaler = StandardScaler()
-    # previsores = scaler.fit_transform(previsores)
-
-    (
-        previsores_treinamento,
-        previsores_teste,
-        classe_treinamento,
-        classe_teste,
-    ) = train_test_split(previsores, classe, test_size=0.25, random_state=0)
-
-    # formats.debug(
-    #     size_total=len(previsores),
-    #     size_treinamento=len(previsores_treinamento),
-    #     size_test=len(previsores_test),
-    # )
-
-    classificador = GaussianNB()
-    classificador = classificador.fit(previsores, classe)
-    previsoes = classificador.predict(previsores_teste)
-    precisao = accuracy_score(classe_teste, previsoes)
-    matriz = confusion_matrix(classe_teste, previsoes)
-
-    # debug(previsores=previsores[:, 0:3])
-    # print(pd.DataFrame(previsores))
-    # print(formats.convert_csv_to_json(formats.path_database("teste.csv")))
-
-    # print(pd.DataFrame(previsoes))
-
-
-def numbersMostRepeated():
-    matrix = list()
-    with open(formats.path_database("teste.csv"), "r") as rfile:
-        for row in rfile:
-            numExtracted = formats.find_ticket(row)
-            for i in numExtracted:
-                arr = [int(x) for x in list(np.asarray_chkfinite(i))]
-                matrix.append(arr)
-    rfile.close()
-    df = pd.DataFrame(
-        matrix, columns=["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
-    )
-    imputer = SimpleImputer(missing_values=np.nan, strategy="mean")
-    imputer = imputer.fit(df)
-    df = imputer.transform(df)
-    df = pd.DataFrame(
-        df, columns=["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
-    )
-    # for c in df.columns:
-    #     columns = (
-    #         df[c].value_counts(normalize=False, sort=True, ascending=False).head(6)
-    #     )
-    #     print([int(x) for x in list(columns.index)])
-
-    """
-      as seis dezendas mais sorteadas
-    """
-    dezenas = pd.DataFrame(
-        df["bola 1"].tolist()
-        + df["bola 2"].tolist()
-        + df["bola 3"].tolist()
-        + df["bola 4"].tolist()
-        + df["bola 5"].tolist()
-        + df["bola 6"].tolist(),
-        columns=["numbers"],
-    )
-    col = dezenas["numbers"].value_counts().sort_values(ascending=True).head(6)
-    print(list(col.index))
 
 
 def megaSenaResults():
@@ -245,9 +109,7 @@ def megaSenaResults():
     """
       verificando se alguma resultado repetido
     """
-    df.groupby(
-        ["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
-    ).size().sort_values(ascending=False)
+    # df.groupby(["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]).size().sort_values(ascending=False)
 
     """
       as seis dezendas mais sorteadas
@@ -263,9 +125,11 @@ def megaSenaResults():
     )
     col = dezenas["numbers"].value_counts().sort_values(ascending=True).head(6)
 
-    # np.random.SeedSequence(8)
-    previsores = df.iloc[:, 0:6]
-    classe = df.iloc[:, 6]
+    previsores = df.iloc[:, 0:6].values
+    classe = df.iloc[:, 6].values
+
+    encoder_previsores = LabelEncoder()
+    previsores[:, 1] = encoder_previsores.fit_transform(previsores[:, 1])
 
     (
         previsores_treinamento,
@@ -274,29 +138,86 @@ def megaSenaResults():
         classe_teste,
     ) = train_test_split(previsores, classe, test_size=0.33, random_state=8)
 
-    # criando modelo
-    modelo = Sequential()
-    modelo.add(Dense(10, input_dim=6, activation="relu"))
-    modelo.add(Dense(12, activation="relu"))
-    modelo.add(Dense(1, activation="sigmoid"))
+    # criando model
+    model = Sequential()
+    model.add(Dense(10, input_dim=6, activation="relu"))
+    model.add(Dense(12, activation="relu"))
+    model.add(Dense(1, activation="sigmoid"))
 
-    # compilando modelo
-    modelo.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+    # compilando model
+    model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
 
-    # treinando modelo
-    # modelo.fit(previsores_treinamento, classe_treinamento)
-    # validando modelo
-    # scores = modelo.evaluate(classe_teste, previsores_teste)
-    # print((modelo.metrics_names[1], scores[1] * 100))
-
-    print(
-       previsores_teste
+    # treinando model
+    model.fit(
+        keras.backend.cast_to_floatx(previsores_treinamento),
+        keras.backend.cast_to_floatx(classe_treinamento),
     )
+    # validando model
+    # scores = model.evaluate(classe_teste, previsores_teste)
+    scores = model.evaluate(
+        keras.backend.cast_to_floatx(previsores_treinamento),
+        keras.backend.cast_to_floatx(classe_treinamento),
+    )
+    print((model.metrics_names[1], scores[1] * 100))
+
+    # 1 tem change 0 não tem
+    # numero_sorteio = [[7, 14, 47, 54, 56, 60]]
+    # predict_class = model.predict_classes(pd.DataFrame(numero_sorteio))
+
+    # predict_proba = model.predict(pd.DataFrame(numero_sorteio))
+    # print("Probablidade: ", round((predict_proba[0][0] * 100), 2), "%")
+    execute_proba(df, model)
+
+
+def execute_proba(df, model):
+    random.seed(60)
+    probe_good = 99
+    probe_current = 0
+
+    tickets = df[
+        ["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
+    ].values.tolist()
+
+    while probe_current < probe_good:
+        dezenas_mega = random.sample(range(1, 60), 6)
+        if not dezenas_mega in tickets:
+            probe_current = int(model.predict(pd.DataFrame([dezenas_mega]))[0][0] * 100)
+        print(
+            "Probabilidade de {0} % -> Dezenas: {1}".format(
+                probe_current, sorted(dezenas_mega)
+            )
+        )
+
+
+def base_mega_analise():
+    df = pd.read_csv(formats.path_database("mega.csv"))
+    previsores = df.iloc[:, 1:7].values
+    classe = df.iloc[:, 6].values
+
+    encoder_previsores = LabelEncoder()
+    previsores[:, 0] = encoder_previsores.fit_transform(previsores[:, 0])
+
+    imputer = SimpleImputer(missing_values=np.nan, strategy="mean")
+    imputer = imputer.fit(previsores[:, 1:7])
+    previsores[:, 1:7] = imputer.transform(previsores[:, 1:7])
+
+    (
+        previsores_treinamento,
+        previsores_teste,
+        classe_treinamento,
+        classe_teste,
+    ) = train_test_split(previsores, classe, test_size=0.33, random_state=8)
+
+    model = Sequential()
+    model.add(Dense(10, input_dim=6, activation="relu"))
+    model.add(Dense(12, activation="relu"))
+    model.add(Dense(1, activation="sigmoid"))
+    model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+    model.fit(previsores_treinamento, classe_treinamento)
+    scores = model.evaluate(previsores_treinamento, classe_treinamento)
+    print((model.metrics_names[1], scores[1] * 100))
+    execute_proba(df, model)
 
 
 # area de chamadas das funções
-# update_csv_file()
-# writeTickets(formats.create_payload_to_csv(100000))
-# classification()
-# numbersMostRepeated()
-megaSenaResults()
+base_mega_analise()
