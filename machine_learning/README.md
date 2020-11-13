@@ -57,35 +57,35 @@
   - Cálculo ganho da informação `Gain(S, A) = Entropy(S)`
     - G(atributo_historia) = `1,53-(5/14*1,37)-(5/14*1,52)-(4/14*0,81)` = 0,26
       - boa: (`5/14`) `-1/5*log(1/5;2)-1/5*log(1/5;2)-3/5*log(3/5;2)` = 1,37
-        - alto: `1/5`
-        - moderado: `1/5`
-        - baixo: `3/5`
-      - desconhecida: `5/14` - `-2/5*log(2/5;2)-1/5*log(2/5;2)-2/5*log(2/5;2)` = 1,52
-        - alto: `2/5`
-        - moderado: `2/5`
-        - baixo: `2/5`
-      - ruim: `4/14` - `-3/4*log(3/4;2)-1/4*log(1/4;2)` = 0,81
-        - alto: `3/4`
-        - moderado: `1/4`
-        - baixo: `0`
+        - alto: (`1/5`)
+        - moderado: (`1/5`)
+        - baixo: (`3/5`)
+      - desconhecida: (`5/14`) `-2/5*log(2/5;2)-1/5*log(2/5;2)-2/5*log(2/5;2)` = 1,52
+        - alto: (`2/5`)
+        - moderado: (`2/5`)
+        - baixo: (`2/5`)
+      - ruim: (`4/14`) `-3/4*log(3/4;2)-1/4*log(1/4;2)` = 0,81
+        - alto: (`3/4`)
+        - moderado: (`1/4`)
+        - baixo: (`0`)
     - G(atributo_divida) = `1,53-(7/14*1,38)-(7/14*1,56)` = 0,06
-      - alta: `7/14` - `-4/7*log(4/7;2)-1/7*log(1/7;2)-2/7*log(2/7;2)` = 1,38
-        - alto: `4/7`
-        - moderado: `1/7`
-        - baixo: `2/7`
-      - baixa: `7/14` - `-2/7*log(2/7;2)-2/7*log(2/7;2)-3/7*log(3/7;2)` = 1.56
-        - alto: `2/7`
-        - moderado: `2/7`
-        - baixo: `3/7`
+      - alta: (`7/14`) `-4/7*log(4/7;2)-1/7*log(1/7;2)-2/7*log(2/7;2)` = 1,38
+        - alto: (`4/7`)
+        - moderado: (`1/7`)
+        - baixo: (`2/7`)
+      - baixa: (`7/14`) `-2/7*log(2/7;2)-2/7*log(2/7;2)-3/7*log(3/7;2)` = 1.56
+        - alto: (`2/7`)
+        - moderado: (`2/7`)
+        - baixo: (`3/7`)
     - G(atributo_garantia) = `1,53-(11/14*1,44)-(3/14*0,92)` = 0,20
-      - nenhuma: `11/14` - `-6/11*log(6/11;2)-2/11*log(6/11;2)-3/11*log(3/11;2)` = 1,44
-        - alto: `6/11`
-        - moderado: `2/11`
-        - baixo: `3/11`
-      - adequada: `3/14` - `-0*log(0;2)-1/3*log(1/3;2)-2/3*log(2/3;2)` = 0,92
-        - alto: `0`
-        - moderado: `1/3` 
-        - baixo: `2/3`
+      - nenhuma: (`11/14`) `-6/11*log(6/11;2)-2/11*log(6/11;2)-3/11*log(3/11;2)` = 1,44
+        - alto: (`6/11`)
+        - moderado: (`2/11`)
+        - baixo: (`3/11`)
+      - adequada: (`3/14`) `-0*log(0;2)-1/3*log(1/3;2)-2/3*log(2/3;2)` = 0,92
+        - alto: (`0`)
+        - moderado: (`1/3`)
+        - baixo: (`2/3`)
     - G(atributo_renda)
 - Árvores de decisão com scikit-learn
 - Random forest
