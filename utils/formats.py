@@ -69,6 +69,10 @@ class Formats:
     def create_payload_model_mega(self, qtd, filename="mega.csv"):
         print("Start up...!")
         accumated = list()
+        if not self.is_file_exists(filename):
+            accumated.append(self.otherWayToGenerateArray(6))
+            return accumated
+
         with open(self.path_database(filename), "rb") as readFile:
             lines = len(readFile.readlines())
             if lines > 1:
@@ -78,3 +82,6 @@ class Formats:
                 accumated.append(self.otherWayToGenerateArray(6))
         readFile.close()
         return accumated
+
+    def is_file_exists(self, filename):
+        return os.path.exists(self.path_database(filename))

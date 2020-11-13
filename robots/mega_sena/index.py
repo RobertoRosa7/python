@@ -68,20 +68,36 @@ def removeLines(id_line):
     writeFile.close()
 
 
-def create_csv_mega(payload):
-    with open(formats.path_database("mega.csv"), "rb") as readFile:
-        lines = len(readFile.readlines())
-        with open(formats.path_database("mega.csv"), "a") as writeFile:
-            writer = csv.writer(writeFile)
-            if lines > 0:
-                writer.writerows(payload)
-            else:
-                writer.writerow(
-                    ["data", "bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
-                )
-                writer.writerows(payload)
-        writeFile.close()
-    readFile.close()
+def create_csv_mega(payload, filename):
+    if not formats.is_file_exists(filename):
+        with open(formats.path_database(filename), "a") as new_file:
+            writer = csv.writer(new_file)
+            writer.writerow(
+                ["data", "bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
+            )
+            writer.writerows(payload)
+    else:
+        with open(formats.path_database(filename), "rb") as readFile:
+            lines = len(readFile.readlines())
+            with open(formats.path_database(filename), "a") as writeFile:
+                writer = csv.writer(writeFile)
+                if lines > 0:
+                    writer.writerows(payload)
+                else:
+                    writer.writerow(
+                        [
+                            "data",
+                            "bola 1",
+                            "bola 2",
+                            "bola 3",
+                            "bola 4",
+                            "bola 5",
+                            "bola 6",
+                        ]
+                    )
+                    writer.writerows(payload)
+            writeFile.close()
+        readFile.close()
     print("Done!")
 
 
@@ -179,15 +195,27 @@ def execute_proba(df, model):
         ["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
     ].values.tolist()
 
+    # df_mega = pd.read_excel(formats.path_database("mega_sena_resultados.xlsx"))
+    # df_mega.columns = map(str.lower, df_mega.columns)  # tolowercase columns
+
+    # tickets = df_mega[
+    #     ["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
+    # ].values.tolist()
+
     while probe_current < probe_good:
         dezenas_mega = random.sample(range(1, 60), 6)
         if not dezenas_mega in tickets:
-            probe_current = int(model.predict(pd.DataFrame([dezenas_mega]))[0][0] * 100)
+            probe_current = float(
+                model.predict(pd.DataFrame([dezenas_mega]))[0][0] * 100
+            )
             # print(probe_current) # Probabilidade de 99 % -> Dezenas: [3, 8, 15, 46, 47, 57]
+        else:
+            probe_current = 100
+            print("dezenda encontrada na base de dados: {0}".format(dezenas_mega))
         # Probabilidade de 99 % -> Dezenas: [10, 15, 17, 19, 20, 37]
         print(
             "Probabilidade de {0} % -> Dezenas: {1}".format(
-                probe_current,
+                round(probe_current, 2),
                 sorted(dezenas_mega),
             )
         )
@@ -203,6 +231,14 @@ def initialize_analysis(df):
     imputer = SimpleImputer(missing_values=np.nan, strategy="mean")
     imputer = imputer.fit(previsores[:, 1:7])
     previsores[:, 1:7] = imputer.transform(previsores[:, 1:7])
+    asDezenasMaisRepetidas = []
+    for c in df.columns:
+        if c.startswith("bola"):
+            asDezenasMaisRepetidas.append(
+                df[c].value_counts().sort_values(ascending=True).index[0]
+            )
+
+    print("As seis dezenas mais repetidas {0}".format(sorted(asDezenasMaisRepetidas)))
 
     (
         previsores_treinamento,
@@ -210,6 +246,8 @@ def initialize_analysis(df):
         classe_treinamento,
         classe_teste,
     ) = train_test_split(previsores, classe, test_size=0.33, random_state=8)
+
+    print("Calculando a probabilidade...")
 
     model = Sequential()
     model.add(Dense(10, input_dim=6, activation="relu"))
@@ -219,10 +257,18 @@ def initialize_analysis(df):
     model.fit(previsores_treinamento, classe_treinamento)
     scores = model.evaluate(previsores_treinamento, classe_treinamento)
 
-    # model.fit(previsores_teste, classe_teste)
-    # scores = model.evaluate(previsores_teste, classe_teste)
-
     print((model.metrics_names[1], scores[1] * 100))
+    print(
+        "Probabiliade sobre as seis dezenas: {0} % {1}".format(
+            round(
+                float(
+                    model.predict(pd.DataFrame([asDezenasMaisRepetidas]))[0][0] * 100
+                ),
+                2,
+            ),
+            sorted(asDezenasMaisRepetidas),
+        )
+    )
     execute_proba(df, model)
 
 
@@ -235,8 +281,9 @@ def initialize():
         initialize_analysis(df)
     else:
         print("update databases...")
+        create_csv_mega(formats.create_payload_model_mega(1000))
 
 
 # area de chamadas das funções
-# create_csv_mega(formats.create_payload_model_mega(1000000))
-initialize()
+# initialize()
+create_csv_mega(formats.create_payload_model_mega(100, "teste.csv"), "teste.csv")
