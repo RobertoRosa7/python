@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 import os, sys, re
 import numpy as np
 import pandas as pd
@@ -182,17 +183,19 @@ def execute_proba(df, model):
         dezenas_mega = random.sample(range(1, 60), 6)
         if not dezenas_mega in tickets:
             probe_current = int(model.predict(pd.DataFrame([dezenas_mega]))[0][0] * 100)
+            # print(probe_current) # Probabilidade de 99 % -> Dezenas: [3, 8, 15, 46, 47, 57]
+        # Probabilidade de 99 % -> Dezenas: [10, 15, 17, 19, 20, 37]
         print(
             "Probabilidade de {0} % -> Dezenas: {1}".format(
-                probe_current, sorted(dezenas_mega)
+                probe_current,
+                sorted(dezenas_mega),
             )
         )
 
 
-def base_mega_analise():
-    df = pd.read_csv(formats.path_database("mega.csv"))
-    previsores = df.iloc[:, 1:7].values
-    classe = df.iloc[:, 6].values
+def initialize_analysis(df):
+    previsores = df.iloc[0:1000, 1:7].values
+    classe = df.iloc[0:1000, 6].values
 
     encoder_previsores = LabelEncoder()
     previsores[:, 0] = encoder_previsores.fit_transform(previsores[:, 0])
@@ -215,10 +218,25 @@ def base_mega_analise():
     model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
     model.fit(previsores_treinamento, classe_treinamento)
     scores = model.evaluate(previsores_treinamento, classe_treinamento)
+
+    # model.fit(previsores_teste, classe_teste)
+    # scores = model.evaluate(previsores_teste, classe_teste)
+
     print((model.metrics_names[1], scores[1] * 100))
     execute_proba(df, model)
 
 
+def initialize():
+    df = pd.read_csv(formats.path_database("mega.csv"))
+    last_date = df[-1:]["data"].values[0]  # 2020-11-12
+    current_date = str(datetime.today().isoformat())[0:10]
+
+    if last_date == current_date:
+        initialize_analysis(df)
+    else:
+        print("update databases...")
+
+
 # area de chamadas das funções
 # create_csv_mega(formats.create_payload_model_mega(1000000))
-base_mega_analise()
+initialize()
