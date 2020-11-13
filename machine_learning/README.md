@@ -56,7 +56,7 @@
   - Resultado da entropia geral: 1,53
   - Cálculo ganho da informação `Gain(S, A) = Entropy(S)`
     - G(atributo_historia) = `1,53-(5/14*1,37)-(5/14*1,52)-(4/14*0,81)` = 0,26
-      - boa: `5/14` - `-1/5*log(1/5;2)-1/5*log(1/5;2)-3/5*log(3/5;2)` = 1,37
+      - boa: (`5/14`) `-1/5*log(1/5;2)-1/5*log(1/5;2)-3/5*log(3/5;2)` = 1,37
         - alto: `1/5`
         - moderado: `1/5`
         - baixo: `3/5`
