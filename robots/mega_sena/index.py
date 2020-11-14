@@ -186,44 +186,22 @@ def megaSenaResults():
     execute_proba(df, model)
 
 
-def execute_proba(df, model):
-    random.seed(60)
-    probe_good = 99
-    probe_current = 0
+def initialize(filename):
+    df = pd.read_csv(formats.path_database(filename))
+    df.columns = map(str.lower, df.columns)  # tolowercase columns
+    last_date = df[-1:]["data"].values[0]  # 2020-11-12
+    current_date = str(datetime.today().isoformat())[0:10]
 
-    tickets = df[
-        ["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
-    ].values.tolist()
-
-    # df_mega = pd.read_excel(formats.path_database("mega_sena_resultados.xlsx"))
-    # df_mega.columns = map(str.lower, df_mega.columns)  # tolowercase columns
-
-    # tickets = df_mega[
-    #     ["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
-    # ].values.tolist()
-
-    while probe_current < probe_good:
-        dezenas_mega = random.sample(range(1, 60), 6)
-        if not dezenas_mega in tickets:
-            probe_current = float(
-                model.predict(pd.DataFrame([dezenas_mega]))[0][0] * 100
-            )
-            # print(probe_current) # Probabilidade de 99 % -> Dezenas: [3, 8, 15, 46, 47, 57]
-        else:
-            probe_current = 100
-            print("dezenda encontrada na base de dados: {0}".format(dezenas_mega))
-        # Probabilidade de 99 % -> Dezenas: [10, 15, 17, 19, 20, 37]
-        print(
-            "Probabilidade de {0} % -> Dezenas: {1}".format(
-                round(probe_current, 2),
-                sorted(dezenas_mega),
-            )
-        )
+    if last_date == current_date:
+        initialize_analysis(df)
+    else:
+        print("update databases...")
+        create_csv_mega(formats.create_payload_model_mega(1000, "mega.csv"), "mega.csv")
 
 
 def initialize_analysis(df):
-    previsores = df.iloc[0:1000, 1:7].values
-    classe = df.iloc[0:1000, 6].values
+    previsores = df.iloc[:, 1:7].values
+    classe = df.iloc[:, 6].values
 
     encoder_previsores = LabelEncoder()
     previsores[:, 0] = encoder_previsores.fit_transform(previsores[:, 0])
@@ -272,18 +250,76 @@ def initialize_analysis(df):
     execute_proba(df, model)
 
 
-def initialize():
-    df = pd.read_csv(formats.path_database("mega.csv"))
-    last_date = df[-1:]["data"].values[0]  # 2020-11-12
-    current_date = str(datetime.today().isoformat())[0:10]
+def execute_proba(df, model):
+    probe_good = 99
+    probe_current = 0
 
-    if last_date == current_date:
-        initialize_analysis(df)
-    else:
-        print("update databases...")
-        create_csv_mega(formats.create_payload_model_mega(1000))
+    tickets = df[
+        ["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
+    ].values.tolist()
+
+    # df_mega = pd.read_excel(formats.path_database("mega_sena_resultados.xlsx"))
+    # df_mega.columns = map(str.lower, df_mega.columns)  # tolowercase columns
+    # tickets = df_mega[
+    #     ["bola 1", "bola 2", "bola 3", "bola 4", "bola 5", "bola 6"]
+    # ].values.tolist()
+
+    while probe_current < probe_good:
+        dezenas_mega = formats.otherWayToGenerateArray(6)[1:]
+        if not dezenas_mega in tickets:
+            probe_current = float(
+                model.predict(pd.DataFrame([dezenas_mega]))[0][0] * 100
+            )
+            # print(probe_current) # Probabilidade de 99 % -> Dezenas: [3, 8, 15, 46, 47, 57]
+        else:
+            probe_current = float(
+                model.predict(pd.DataFrame([dezenas_mega]))[0][0] * 100
+            )
+            print("dezenda encontrada na base de dados: {0}".format(dezenas_mega))
+
+        # Probabilidade de 99 % -> Dezenas: [10, 15, 17, 19, 20, 37]
+        print(
+            "Probabilidade de {0} % -> Dezenas: {1}".format(
+                round(probe_current, 2),
+                sorted(dezenas_mega),
+            )
+        )
+
+
+def convertExcelMegaSenaToCsv(filename):
+    try:
+        df = pd.read_excel(formats.path_database(filename))
+        df.columns = map(str.lower, df.columns)  # tolowercase columns
+        df["data"] = pd.to_datetime(df["data"])
+
+        predicts = df.iloc[:, 1:8].values.tolist()
+        print(predicts)
+        return predicts
+    except AttributeError:
+        print("File not suported")
 
 
 # area de chamadas das funções
-# initialize()
-create_csv_mega(formats.create_payload_model_mega(100, "teste.csv"), "teste.csv")
+# initialize("teste.csv")
+# convertExcelMegaSenaToCsv("mega_sena_resultados.xlsx")
+# create_csv_mega(convertExcelMegaSenaToCsv("mega_sena_resultados.xlsx"),"teste.csv")
+
+df = pd.read_csv(formats.path_database("teste.csv"))
+dateLast = df.sort_values("data", ascending=False)[-1:]["data"].values[0]
+dateFirst = df.sort_values("data", ascending=True)[-1:]["data"].values[0]
+
+dateMediaFirst = formats.getPeriod(5, dateLast, dateFirst)["dateMediaFirst"]
+dateMediaLast = formats.getPeriod(5, dateLast, dateFirst)["dateMediaLast"]
+
+df.loc[
+    (df["data"] <= dateMediaFirst) & (df["data"] >= dateMediaLast), "proba"
+] = "moderate"
+
+df.loc[(df["data"] > dateMediaFirst) & (df["data"] <= dateFirst), "proba"] = "low"
+df.loc[(df["data"] >= dateLast) & (df["data"] < dateMediaLast), "proba"] = "high"
+
+moderate = df.loc[(df["data"] <= dateMediaFirst) & (df["data"] >= dateMediaLast)]
+low = df.loc[(df["data"] > dateMediaFirst) & (df["data"] <= dateFirst)]
+high = df.loc[(df["data"] >= dateLast) & (df["data"] < dateMediaLast)]
+
+print(high)

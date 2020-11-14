@@ -11,7 +11,10 @@ class Formats:
             print("key %s, value %s" % (key, value))
 
     def path_database(self, filename):
-        return os.path.join(os.path.dirname(__file__), "../databases/" + filename)
+        try:
+            return os.path.join(os.path.dirname(__file__), "../databases/" + filename)
+        except FileNotFoundError:
+            return "Arquivo ou Diretório não encontrado"
 
     def convert_csv_to_json(self, file_csv):
         json_file = {}
@@ -85,3 +88,24 @@ class Formats:
 
     def is_file_exists(self, filename):
         return os.path.exists(self.path_database(filename))
+
+    def getPeriod(self, period, lastDate, firstDate):
+        yearLastDate = int(lastDate.split("-")[0]) + period
+        yearFirstDate = int(firstDate.split("-")[0]) - period
+
+        dateMediaLast = (
+            str(yearLastDate)
+            + "-"
+            + str(lastDate.split("-")[1])
+            + "-"
+            + str(lastDate.split("-")[2])
+        )
+
+        dateMediaFirst = (
+            str(yearFirstDate)
+            + "-"
+            + str(firstDate.split("-")[1])
+            + "-"
+            + str(firstDate.split("-")[2])
+        )
+        return {"dateMediaLast": dateMediaLast, "dateMediaFirst": dateMediaFirst}

@@ -86,7 +86,24 @@
         - alto: (`0`)
         - moderado: (`1/3`)
         - baixo: (`2/3`)
-    - G(atributo_renda)
+    - G(atributo_renda) `1,53-(3/14*0)-(4/14*1,00)-(7/14*1,15)` = 0,66
+    - menor que 35: (3/14) `-3/3*log(3/3;2)-0*log(0;2)-0*log(0;2)` = 0,00
+      - alto: `(3/3)`
+      - moderado: `(0)`
+      - baixo: `(0)`
+    - igual ou maior que 35 e menor que 35: `(4/14)` `-2/4*log(2/4;2)-2/4*log(2/4;2)-0*log(0;2)` = 1,00
+      - alto: `(2/4)`
+      - moderado: `(2/4)`
+      - baixo: `(0)`
+    - maior que 35: `(7/14)` `-1/7*log(1/7;2)-1/7*log(1/7;2)-5/7*log(5/7;2)` = 1,15
+      - alto: `(1/7)`
+      - moderado: `(1/7)`
+      - baixo: `(5/7)`
+    - resultado:
+      - Histórico: `(0,26)`
+      - Dívida: `(0,06)`
+      - Garantias: `0,20`
+      - Renda: `0,66`
 - Árvores de decisão com scikit-learn
 - Random forest
 - Random forest com scikit-learn
