@@ -104,6 +104,27 @@
       - Dívida: `(0,06)`
       - Garantias: `0,20`
       - Renda: `0,66`
+
+###### 14/11/2020
+
+- Árvores de decisão
+  - Bias (viés)
+  - Erros por classificação
+  - Variânça
+    - Erros por sensibilidade pequenas mudanças na base de treinamento
+    - Overfitting - algoritmo se adapta demais ao registro de treinamento
+  - Vantagens
+    - Fácil interpretação
+    - Não precisa de padronização ou normalização
+    - Rápido para classificar novos registros
+  - Desvantagens
+    - Overfitting
+    - Geração de árvores muito complexas
+    - Pequenas mudanças na árvore
+    - Problema NP-completo para construir a árvore
+  - Random Forest `Kinect da Microsoft`
+    - Melhoram o desempenho na árvore de decisção
+  - CART - Classification And Regression Trees
 - Árvores de decisão com scikit-learn
 - Random forest
 - Random forest com scikit-learn
