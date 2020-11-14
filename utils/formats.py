@@ -6,17 +6,47 @@ from flask import make_response
 
 
 class Formats:
+    """Formats
+
+    Utils
+    -----
+    Para uso de recursos que podem ser utils
+    """
+
     def debug(self, **Kwargs):
+        """Debug: string"""
         for key, value in Kwargs.items():
             print("key %s, value %s" % (key, value))
 
     def path_database(self, filename):
+        """
+        Return : String
+        Notes
+        -----
+          Retorna uma string com o path completo para o diretório databases
+
+        """
         try:
             return os.path.join(os.path.dirname(__file__), "../databases/" + filename)
+            # return os.path.abspath(
+            #     os.path.join(
+            #         os.path.dirname(os.getcwd()), "python/databases/" + filename
+            #     )
+            # )
         except FileNotFoundError:
             return "Arquivo ou Diretório não encontrado"
 
     def convert_csv_to_json(self, file_csv):
+        """
+        Parameter
+        ---------
+        file_csv : String, default=None
+
+        Notes
+        -----
+        Converter um arquivo CSV para formato JSON, para uso do JavaScript em retorno API
+
+        """
         json_file = {}
 
         with open(file_csv) as read_file:
