@@ -129,6 +129,16 @@
 - Random forest
 - Random forest com scikit-learn
 
+###### 15/11/2020
+
+### Aprendizagem por Regra
+
+- Introdução a Regra
+- Indução de regras OneR
+- Indução de regras algoritmo OneR I e OneR II
+- Indução de regras algoritmo PRISM
+- Classificador base - majority learner
+
 #### Referências complementares
 
 > Livro Data Mining with Decision Trees: Theory and Applications (Machine Perception and Artificial Intelligence) de Oded Z. Maimon: livro de fácil compreensão e focado somente em árvores de decisão
