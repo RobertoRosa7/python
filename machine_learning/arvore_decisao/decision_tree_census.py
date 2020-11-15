@@ -15,7 +15,7 @@ from utils.formats import Formats
 
 ft = Formats()
 
-df = pd.read_csv(ft.path_datadf("census.csv"))
+df = pd.read_csv(ft.path_database("census.csv"))
 # 0:100 prevent the kernel buffer overflow
 previsores = df.iloc[0:1000, 0:14].values
 classe = df.iloc[0:1000, 14].values
