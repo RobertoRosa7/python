@@ -1,5 +1,11 @@
 ### Intro
 
+- Tipos de aprendizagem de maquina
+  - Naive bayes: gera um modelo que é a tabela de probabilidade
+  - Decision tree: gera um modelo que é a árvore de decisão
+  - Rule OneR: gera um modelo que é o conjunto de regras
+  - KNN (k-nearest neighbour): gera uma instância que cálcula a distância dos registros
+
 ###### 01/11/2020
 
 - Tipos de Variáveis
@@ -28,6 +34,7 @@
 ### Aprendizagem Bayesiana
 
 - Naive bayes introdução
+  - Modelo: Analise os dados e constroe uma tabela de probabilidade
 - Naive bayes aprendizagem
 - Naive bayes classificação
 - Naive bayes correção laplaciana - corrigir valor com zero necessario adicionar um novo registro para fazer calculo
@@ -46,6 +53,7 @@
 
 - Intro
 - Intro árvore de decisão
+  - Modelo: Analiza dos dados e constroe um árvore de decisão
   - identificar qual coluna da base de dados será responsável por ser a classe, depois contar quantas
     vezes de repete os atributos dividindo pelo total de atributos da classe... no caso da base de dados de risco de crédito a coluna de risco contem `total de 14 atributos sendo 6 de risco alto, 3 moderado e 5 baixo ficando`
     - risco alto: 6/14
@@ -134,10 +142,52 @@
 ### Aprendizagem por Regra
 
 - Introdução a Regra
+  - Modelo: Analisa os dados e constroe uma regra
 - Indução de regras OneR
 - Indução de regras algoritmo OneR I e OneR II
 - Indução de regras algoritmo PRISM
 - Classificador base - majority learner
+
+###### 17/112020
+
+### Aprendizagem baseada em instâncias
+
+- Introdução KNN (k-nearest neighbour)
+  - Modelo: Analisa os dados e armazena os exemplos de treinamento
+- Cálculo de distâncias KNN (k-nearest neighbour)
+
+  - Distância euclidiana: `DE(x,y) = Math.sqrt(Math.pow(v1[index] - v2[index], 2))`
+
+    ```
+      x = [5,7,9]
+      y = [5,5,5]
+      Subtração de cada posição do vetor
+        5-5 = 0
+        7-5 = 2
+        9-5 = 4
+      Elevação ao quadrado
+        0² = 0
+        2² = 4
+        4² = 15
+      Somatório
+        0+4+16 = 20
+      Raiz quadrada
+        sqrt(20) = 4,47
+    ```
+
+    ```
+      import math
+      v1 = [5,7,9]
+      v2 = [5,5,5]
+      soma = 0
+
+      for i in range(len(v1)):
+        soma += math.pow(v1[i] - v2[i], 2)
+      DE = math.sqrt(soma)
+    ```
+
+- Classificação KNN (k-nearest neighbour)
+- Normalização e padronização KNN (k-nearest neighbour)
 
 #### Referências complementares
 
