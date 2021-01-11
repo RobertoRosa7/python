@@ -6,6 +6,7 @@
 - [x] API Pets
 - [x] Read Excel, Word and PDF
 - [x] Machine Learning and Data Science with Python
+- [x] GTK3
 
 ###### 11/07/2020
 
@@ -64,7 +65,9 @@
   - Reading and editing Word Documents
 
 - [x] Machine Learning with Python
+
   ###### 31/10/2020
+
   - Introdução
     - Conceitos básicos sobre aprendizagem de máquina
   - Classificação
@@ -94,7 +97,12 @@
     - Algoritmo ECLAT;
     - Base de dados do mercado;
   - Agrupamento
+
     - K-means;
     - Agrupamento Hierárquico;
     - DBSCAN;
     - Base de dados de gastos no cartão de crédito
+
+    ###### 11/01/2021
+
+  - [x] Introdução ao GTK3 com python
