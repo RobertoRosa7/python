@@ -3,3 +3,4 @@
 ###### 11/01/2021
 
 - [x] Introdução
+- [x] Criando os primeiros Widgets
