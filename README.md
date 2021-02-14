@@ -106,3 +106,9 @@
     ###### 11/01/2021
 
   - [x] Introdução ao GTK3 com python
+
+###### 14/02/2021
+
+- [x] API Server
+- [x] Mongodb
+- [x] Routes
