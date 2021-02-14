@@ -4,3 +4,10 @@
 .DS_STORE
 /databases
 databases
+*.pyc
+/.idea
+app/modules.rar
+venv/*
+/.vscode
+.venv
+.vscode
