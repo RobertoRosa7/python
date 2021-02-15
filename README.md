@@ -113,3 +113,4 @@
 - [x] Mongodb
 - [x] Routes
 - [x] Salvando e listando registro no mongodb
+- [x] Abstraindo modulo database
