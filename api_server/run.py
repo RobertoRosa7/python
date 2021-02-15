@@ -29,5 +29,14 @@ def health_check():
   return str(json.dumps({'API':"it's working"})), 200
 
 
+@app.after_request
+def after_request(response):
+    response.headers.set('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,Token,Avista-Token')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    # response.headers.set('Access-Control-Allow-Credentials', 'true')
+    return response
+
+
 if __name__ == "__main__":
   app.run(debug=True)

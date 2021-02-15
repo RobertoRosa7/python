@@ -109,8 +109,12 @@
 
 ###### 14/02/2021
 
-- [x] API Server
+- [x] API Server with Flask Python
 - [x] Mongodb
 - [x] Routes
 - [x] Salvando e listando registro no mongodb
 - [x] Abstraindo modulo database
+
+
+###### 15/02/2021
+- [x] Novo método para calcular consolidado

@@ -4,8 +4,8 @@ sys.path.append(os.path.abspath(os.getcwd()))
 
 from flask import jsonify, request, Blueprint
 from bson.json_util import dumps
-
 from api_server.enviroment.enviroment import get_collection
+
 
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
@@ -13,14 +13,9 @@ dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 @dashboard.route("/fetch_registers", methods=["GET"])
 def fetch_registers():
   try:
-    # result = db.collection_registers.find()
-    # result = db.primeiroapp.get_collection('collection_registers').find()
     result = get_collection('collection_registers').find()
     response = dumps(result)
     return response
-    # col = db.collection_registers
-    # print(print()
-    # return str(json.dumps({'API':"it's working"})), 200
   except Exception as e:
     return not_found(e)
 
@@ -29,7 +24,7 @@ def fetch_registers():
 def new_register():
   try:
     payload = request.json
-    # db.collection_registers.insert(payload)
+    payload['status'] = 'done'
     get_collection('collection_registers').insert(payload)
     response = jsonify('successfully')
     response.status_code = 200
@@ -37,6 +32,30 @@ def new_register():
     return response
   except Exception as e:
    return not_found(e)
+
+
+@dashboard.route("/calc_consolidado", methods=["GET"])
+def calc_consolidado():
+  payload = {
+      "total_credit": 0,
+      "total_debit": 0,
+      "total_consolidado": 0
+    }
+  try:
+    result = get_collection('collection_registers').find()
+    response = dumps(result)
+    data = json.loads(response)
+
+    for i in range(len(data)):
+        if data[i]['type'] == 'incoming':
+            payload['total_credit'] += int(data[i]['value'])
+        elif data[i]['type'] == 'outcoming':
+            payload['total_debit'] += int(data[i]['value'])
+
+    payload['total_consolidado'] += (payload['total_credit'] - payload['total_debit'])
+    return jsonify(payload)
+  except Exception as e:
+    return not_found(e)
 
 
 @dashboard.errorhandler(404)
