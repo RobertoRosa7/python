@@ -10,8 +10,8 @@ from api_server.enviroment.enviroment import get_collection
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
 
-@dashboard.route("/busca-registros", methods=["GET"])
-def busca_registro():
+@dashboard.route("/fetch_registers", methods=["GET"])
+def fetch_registers():
   try:
     # result = db.collection_registers.find()
     # result = db.primeiroapp.get_collection('collection_registers').find()
@@ -25,8 +25,8 @@ def busca_registro():
     return not_found(e)
 
 
-@dashboard.route("/novo-registro", methods=["POST"])
-def novo_registro():
+@dashboard.route("/new_register", methods=["POST"])
+def new_register():
   try:
     payload = request.json
     # db.collection_registers.insert(payload)
