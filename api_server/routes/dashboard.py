@@ -1,10 +1,11 @@
 import os, sys, json
+import re
 
 sys.path.append(os.path.abspath(os.getcwd()))
 
 from flask import jsonify, request, Blueprint
-from bson.json_util import dumps
-from api_server.enviroment.enviroment import get_collection
+from bson.json_util import dumps, ObjectId
+from api_server.enviroment.enviroment import get_collection, db
 
 
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
@@ -26,7 +27,7 @@ def new_register():
     payload = request.json
     payload['status'] = 'done'
     get_collection('collection_registers').insert(payload)
-    response = jsonify('successfully')
+    response = jsonify({'status':200, 'msg': 'Registro adicionado'})
     response.status_code = 200
     
     return response
@@ -58,9 +59,56 @@ def calc_consolidado():
     return not_found(e)
 
 
+@dashboard.route('/update_register', methods=['POST'])
+def update_one():
+  try:
+    payload = request.get_json()
+
+    if not payload['_id']:
+        return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
+    
+    find_id = ObjectId(payload['_id']['$oid'])
+    find_result = get_collection('collection_registers').find_one({"_id": find_id})
+
+    if find_result != None and type(find_result) == dict:
+        del payload['_id']
+        result = get_collection('collection_registers').update_one({"_id": find_id}, {"$set": payload})
+        if result.modified_count > 0:
+          return str(json.dumps({'status':200, 'msg':'Um registro foi modificado'})), 200
+        else:
+          return str(json.dumps({'status':404, 'msg': 'Nenhum registro foi modificado.'})), 404
+    else:
+       return str(json.dumps({'status':404,"msg":"Registro não foi encontrado"})), 404
+  except Exception as e:
+    return not_found(e)
+
+
+@dashboard.route('/delete_register', methods=['POST'])
+def delete_one():
+  try:
+    payload = request.get_json()
+
+    if not payload['_id']:
+        return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
+    
+    find_id = ObjectId(payload['_id']['$oid'])
+    find_result = get_collection('collection_registers').find_one({"_id": find_id})
+
+    if find_result != None and type(find_result) == dict:
+        del payload['_id']
+        get_collection('collection_registers').delete_one({"_id": find_id})
+        result = get_collection('collection_registers').find()
+        response = dumps(result)
+        return response
+    else:
+       return str(json.dumps({'status':404,"msg":"Registro não foi encontrado"})), 404
+  except Exception as e:
+    return not_found(e)
+
+
 @dashboard.errorhandler(404)
 def not_found(error=None):
-    message = {'status': 404, 'message': 'page found' + request.url, 'error': error}
+    message = {'status': 500, 'message': 'page found' + request.url, 'error': error}
     response = jsonify(message)
     response.status_code = 500
     return response
