@@ -1,11 +1,13 @@
 import os, sys, json
 import re
+import asyncio
 
 sys.path.append(os.path.abspath(os.getcwd()))
 
 from flask import jsonify, request, Blueprint
 from bson.json_util import dumps, ObjectId
 from api_server.enviroment.enviroment import get_collection, db
+from api_server.robots.get_status_code import get_status_code
 
 
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
@@ -63,7 +65,6 @@ def calc_consolidado():
 def update_one():
   try:
     payload = request.get_json()
-
     if not payload['_id']:
         return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
     
@@ -76,7 +77,7 @@ def update_one():
         if result.modified_count > 0:
           return str(json.dumps({'status':200, 'msg':'Um registro foi modificado'})), 200
         else:
-          return str(json.dumps({'status':404, 'msg': 'Nenhum registro foi modificado.'})), 404
+          return str(json.dumps({'status':200, 'msg': 'Nenhum registro foi modificado.'})), 200
     else:
        return str(json.dumps({'status':404,"msg":"Registro não foi encontrado"})), 404
   except Exception as e:
@@ -102,6 +103,15 @@ def delete_one():
         return response
     else:
        return str(json.dumps({'status':404,"msg":"Registro não foi encontrado"})), 404
+  except Exception as e:
+    return not_found(e)
+
+
+@dashboard.route('/status_code', methods=["GET"])
+def get_code():
+  try:
+    data = asyncio.run(get_status_code())
+    return str(json.dumps(data)), 200
   except Exception as e:
     return not_found(e)
 
