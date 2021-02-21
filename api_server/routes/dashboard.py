@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, sys, json
 import re
 import asyncio
@@ -12,12 +13,39 @@ from api_server.robots.get_status_code import get_status_code
 
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
+def calcular_consolidado(lists):
+  consolidado = {
+    "total_credit": 0,
+    "total_debit": 0,
+    "total_consolidado": 0
+  }
+
+  for i in range(len(lists)):
+    if lists[i]['type'] == 'incoming':
+        consolidado['total_credit'] += float(lists[i]['value'])
+    elif lists[i]['type'] == 'outcoming':
+        consolidado['total_debit'] += float(lists[i]['value'])
+
+  consolidado['total_consolidado'] += (consolidado['total_credit'] - consolidado['total_debit'])
+  return consolidado
 
 @dashboard.route("/fetch_registers", methods=["GET"])
 def fetch_registers():
   try:
+    data = {'results': [] }
+
     result = get_collection('collection_registers').find()
-    response = dumps(result)
+
+    dumps_result = dumps(result)
+    str_to_json = json.loads(dumps_result)
+    
+    data['consolidado'] = calcular_consolidado(str_to_json)
+
+    for i in range(len(str_to_json)):
+        data['results'].append(str_to_json[i])
+
+    response = jsonify({'status':200, 'msg': 'total de registros: ' + str(len(str_to_json)), 'data': data})
+    response.status_code = 200
     return response
   except Exception as e:
     return not_found(e)
@@ -87,6 +115,7 @@ def update_one():
 @dashboard.route('/delete_register', methods=['POST'])
 def delete_one():
   try:
+    data = {'results': [] }
     payload = request.get_json()
 
     if not payload['_id']:
@@ -98,8 +127,18 @@ def delete_one():
     if find_result != None and type(find_result) == dict:
         del payload['_id']
         get_collection('collection_registers').delete_one({"_id": find_id})
+       
         result = get_collection('collection_registers').find()
-        response = dumps(result)
+        dumps_result = dumps(result)
+        str_to_json = json.loads(dumps_result)
+        
+        data['consolidado'] = calcular_consolidado(str_to_json)
+        
+        for i in range(len(str_to_json)):
+            data['results'].append(str_to_json[i])
+
+        response = jsonify({'status':200, 'msg': 'total de registros: ' + str(len(str_to_json)), 'data': data})
+        response.status_code = 200
         return response
     else:
        return str(json.dumps({'status':404,"msg":"Registro não foi encontrado"})), 404
@@ -107,7 +146,7 @@ def delete_one():
     return not_found(e)
 
 
-@dashboard.route('/status_code', methods=["GET"])
+@dashboard.route('/get_status_code', methods=["GET"])
 def get_code():
   try:
     data = asyncio.run(get_status_code())

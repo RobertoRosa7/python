@@ -1,7 +1,5 @@
 
 # -*- coding: utf-8 -*-
-
-from asyncio.runners import run
 import bs4
 import requests
 import re
@@ -16,7 +14,7 @@ async def get_status_code():
   soup = bs4.BeautifulSoup(res.text, 'html.parser')
   elements = soup.select('ul li')
   data = await making_data(elements)
-  
+
   return data
 
 

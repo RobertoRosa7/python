@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, sys, json
 
 sys.path.append(os.path.abspath(os.getcwd()))
