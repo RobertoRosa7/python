@@ -1,76 +1,76 @@
 # Python
 
-- [x] Intro
-- [x] Search phone number
-- [x] WebCrawler
-- [x] API Pets
-- [x] Read Excel, Word and PDF
-- [x] Machine Learning and Data Science with Python
-- [x] GTK3
+* [x] Intro
+* [x] Search phone number
+* [x] WebCrawler
+* [x] API Pets
+* [x] Read Excel, Word and PDF
+* [x] Machine Learning and Data Science with Python
+* [x] GTK3
 
 ###### 11/07/2020
 
-- [x] Search phone number
+* [x] Search phone number
 
   ###### 11/07/2020
 
-  - Create regex for `phone` numbers
-  - Create regex for `email` address
-  - Get text off clipboard
-  - Extract the `email/phone` number from text
-  - Copy the extracted `email/phone` to the clipboard
+  + Create regex for `phone` numbers
+  + Create regex for `email` address
+  + Get text off clipboard
+  + Extract the `email/phone` number from text
+  + Copy the extracted `email/phone` to the clipboard
 
-- [x] Intro
+* [x] Intro
 
   ###### 12/07/2020
 
-  - Reading and Writting Plaintext File
-  - Filename and File path
-  - Copying, Moving, Rename files and folders
-  - Open, Read and Write File
-  - Copying, Moving and Rename files and folders
-  - Delete file and folder
-  - Walking on folders
+  + Reading and Writting Plaintext File
+  + Filename and File path
+  + Copying, Moving, Rename files and folders
+  + Open, Read and Write File
+  + Copying, Moving and Rename files and folders
+  + Delete file and folder
+  + Walking on folders
 
   ###### 02/08/2020
 
-  - Debugging
+  + Debugging
 
-- [x] Web Crawler
+* [x] Web Crawler
 
   ###### 15/08/2020
 
-  - Web browser module
-  - Download from the web with the request Module
-  - Parsing HTML with Beautiful Soup Module
-  - Controlling browser with Selenium Module
+  + Web browser module
+  + Download from the web with the request Module
+  + Parsing HTML with Beautiful Soup Module
+  + Controlling browser with Selenium Module
 
   ###### 27/08/2020
 
-  - Parsing HTML with the Beautiful Soup Module
-  - Get Price from Web Site
-  - Download content from Web Site
+  + Parsing HTML with the Beautiful Soup Module
+  + Get Price from Web Site
+  + Download content from Web Site
 
   ###### 06/09/2020
 
-  - Selenium
+  + Selenium
 
-- [x] Read Excel, Word and PDF
+* [x] Read Excel, Word and PDF
 
   ###### 08/09/2020
 
-  - Reading Excel SpreadSheets
-  - Editing Excel SpreadSheets
-  - Reading PDF and Excel
-  - Reading and editing Word Documents
+  + Reading Excel SpreadSheets
+  + Editing Excel SpreadSheets
+  + Reading PDF and Excel
+  + Reading and editing Word Documents
 
-- [x] Machine Learning with Python
+* [x] Machine Learning with Python
 
   ###### 31/10/2020
 
-  - Introdução
+  + Introdução
     - Conceitos básicos sobre aprendizagem de máquina
-  - Classificação
+  + Classificação
     - Pré-processamento;
     - Naive Bytes;
     - Árvore de decisão;
@@ -83,7 +83,7 @@
     - Combinação e Rejeição de Classificadores;
     - Base de dados bom e mal pagador;
     - Base de dados para previsão da classe salarial;
-  - Regressão
+  + Regressão
     - Regressão linear;
     - Regressão Polinomial;
     - Árvore de decisão;
@@ -92,11 +92,11 @@
     - Redes Neurais Artificiais;
     - Base de dados plano de saúde;
     - Base de dados preço das casas;
-  - Regras de Associação
+  + Regras de Associação
     - Algoritmo Apriori;
     - Algoritmo ECLAT;
     - Base de dados do mercado;
-  - Agrupamento
+  + Agrupamento
 
     - K-means;
     - Agrupamento Hierárquico;
@@ -105,16 +105,20 @@
 
     ###### 11/01/2021
 
-  - [x] Introdução ao GTK3 com python
+  + [x] Introdução ao GTK3 com python
 
 ###### 14/02/2021
 
-- [x] API Server with Flask Python
-- [x] Mongodb
-- [x] Routes
-- [x] Salvando e listando registro no mongodb
-- [x] Abstraindo modulo database
-
+* [x] API Server with Flask Python
+* [x] Mongodb
+* [x] Routes
+* [x] Salvando e listando registro no mongodb
+* [x] Abstraindo modulo database
 
 ###### 15/02/2021
-- [x] Novo método para calcular consolidado
+
+* [x] Novo método para calcular consolidado
+
+###### 22/02/2021
+
+* [x] uploading file requiremts.txt
