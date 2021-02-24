@@ -122,3 +122,10 @@
 ###### 22/02/2021
 
 * [x] uploading file requiremts.txt
+
+###### 24/02/2021
+
+* [x] Fazendo filtro de dias recebido por paramentro
+* [x] Fazendo conversão de data string pra timestamp
+* [x] Fazendo busca por dias no banco de dados
+* [x] Definido API URL como variável de ambiente e preparando para conexão com Servidor de Produção

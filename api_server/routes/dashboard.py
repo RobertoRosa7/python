@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import os, sys, json
-import re
 import asyncio
-
+import pymongo
+import datetime
+import time
 sys.path.append(os.path.abspath(os.getcwd()))
 
+from datetime import date, datetime as dt
 from flask import jsonify, request, Blueprint
 from bson.json_util import dumps, ObjectId
-from api_server.enviroment.enviroment import get_collection, db
+from api_server.enviroment.enviroment import db
 from api_server.robots.get_status_code import get_status_code
-
 
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
@@ -32,17 +33,34 @@ def calcular_consolidado(lists):
 @dashboard.route("/fetch_registers", methods=["GET"])
 def fetch_registers():
   try:
+    days = request.args.get('days', default=7, type=int)
+    todos = request.args.get('todos', default=None, type=str)
     data = {'results': [] }
+    rangeDates = []
+    filtered = {}
 
-    result = get_collection('collection_registers').find()
+    for i in range(0, days):
+      rangeDates.append((datetime.date.today() - datetime.timedelta(i)).isoformat())
+    
+    if todos == None:
+      filtered['created_at'] = {
+        '$lte': int(time.mktime(datetime.datetime.strptime(rangeDates[0], "%Y-%m-%d").timetuple())*1e3), 
+        '$gte': int(time.mktime(datetime.datetime.strptime(rangeDates[-1], "%Y-%m-%d").timetuple())*1e3)
+      }
 
+    result = db.collection_registers.find(filtered).sort('created_at', pymongo.DESCENDING)
+    
     dumps_result = dumps(result)
     str_to_json = json.loads(dumps_result)
-    
     data['consolidado'] = calcular_consolidado(str_to_json)
 
+    # print('start: {1} end: {0}'.format(rangeDates[0], rangeDates[-1]))
+    # str_to_timestamp = time.mktime(datetime.datetime.strptime(rangeDates[0], "%Y-%m%d").timetuple())
+    # print(str_to_timestamp)
     for i in range(len(str_to_json)):
-        data['results'].append(str_to_json[i])
+      # conveter timestamp javascript to string
+      # date = datetime.datetime.fromtimestamp(str_to_json[i]['created_at'] / 1e3).strftime('%Y-%m-%d')
+      data['results'].append(str_to_json[i])
 
     response = jsonify({'status':200, 'msg': 'total de registros: ' + str(len(str_to_json)), 'data': data})
     response.status_code = 200
@@ -56,7 +74,7 @@ def new_register():
   try:
     payload = request.json
     payload['status'] = 'done'
-    get_collection('collection_registers').insert(payload)
+    db.collection_registers.insert(payload)
     response = jsonify({'status':200, 'msg': 'Registro adicionado'})
     response.status_code = 200
     
@@ -73,7 +91,7 @@ def calc_consolidado():
       "total_consolidado": 0
     }
   try:
-    result = get_collection('collection_registers').find()
+    result = db.collection_registers.find()
     response = dumps(result)
     data = json.loads(response)
 
@@ -97,11 +115,11 @@ def update_one():
         return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
     
     find_id = ObjectId(payload['_id']['$oid'])
-    find_result = get_collection('collection_registers').find_one({"_id": find_id})
+    find_result = db.collection_registers.find_one({"_id": find_id})
 
     if find_result != None and type(find_result) == dict:
         del payload['_id']
-        result = get_collection('collection_registers').update_one({"_id": find_id}, {"$set": payload})
+        result = db.collection_registers.update_one({"_id": find_id}, {"$set": payload})
         if result.modified_count > 0:
           return str(json.dumps({'status':200, 'msg':'Um registro foi modificado'})), 200
         else:
@@ -122,13 +140,13 @@ def delete_one():
         return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
     
     find_id = ObjectId(payload['_id']['$oid'])
-    find_result = get_collection('collection_registers').find_one({"_id": find_id})
+    find_result = db.collection_registers.find_one({"_id": find_id})
 
     if find_result != None and type(find_result) == dict:
         del payload['_id']
-        get_collection('collection_registers').delete_one({"_id": find_id})
+        db.collection_registers.delete_one({"_id": find_id})
        
-        result = get_collection('collection_registers').find()
+        result = db.collection_registers.find()
         dumps_result = dumps(result)
         str_to_json = json.loads(dumps_result)
         
