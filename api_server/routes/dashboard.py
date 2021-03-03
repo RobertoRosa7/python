@@ -23,42 +23,21 @@ def build_evocucao(lists):
   list_dates = []
 
   df = pd.read_json(lists)
-  get_dates_list = pd.DataFrame(df['created_at']).values
+  get_dates_list = pd.DataFrame(df['created_at']).drop_duplicates().values
   df = df.drop(columns=['_id', 'position', 'description', 'user', 'edit', 'status', 'brand', 'updated_at'])
-  df['dates'] = pd.to_datetime(df['created_at'].dt.strftime('%Y-%m-%d'))
   df = pd.DataFrame(df.groupby(['created_at', 'category']).sum()['value']).unstack(fill_value=0)['value'].to_json()
   
-  # print(json.loads(df))
-  # get_to_create_list = pd.DataFrame(df['category']).drop_duplicates().values
-  # get_to_build_list = pd.DataFrame(df[['category', 'value', 'created_at', 'type']]).values
-
-  # for cat in get_to_create_list:
-  #   category_format = cat[0].lower().replace(' ', '_').replace('&', 'e').replace('á','a').replace('ã','a').replace('ç','c').replace('õ','o')
-  #   build_categories[category_format] = {}
-  #   build_categories[category_format]['values'] = []
-  #   build_categories[category_format]['dates'] = []
-  #   build_categories[category_format]['data'] = []
-  #   build_categories[category_format]['label'] = cat[0]
-  #   build_list.append(build_categories)
-  #   build_listed.append(category_format)
-  
-  # for i in get_to_build_list:
-  #   cat_name = i[0].lower().replace(' ', '_').replace('&', 'e').replace('á','a').replace('ã','a').replace('ç','c').replace('õ','o')
-  #   if cat_name in build_listed:
-  #     build_categories[cat_name]['values'].append(i[1])
-  #     build_categories[cat_name]['dates'].append(pd.Timestamp(i[2]).timestamp())
-  #     build_categories[cat_name]['data'] = [build_categories[cat_name]['dates'], build_categories[cat_name]['values']]
-
   str_to_json = json.loads(df)
+
   for i, v in str_to_json.items():
     name = i.lower().replace(' ', '_').replace('&', 'e').replace('á','a').replace('ã','a').replace('ç','c').replace('õ','o')
     build_categories[name] = {'values': [], 'label': ''}
     build_categories[name]['label'] = i
     for d in v.values():
       build_categories[name]['values'].append(d)
-    
+
   for d in get_dates_list:
-      list_dates.append(int(pd.Timestamp(d[0]).timestamp()))
+    list_dates.append(int(pd.Timestamp(d[0]).timestamp()))
 
   build_categories['dates'] = list_dates
   return build_categories
