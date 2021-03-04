@@ -12,6 +12,11 @@ from api_server.robots.get_status_code import get_status_code
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
 
+def clear_text(text):
+  text.lower().replace(' ', '_').replace('&', 'e').replace('á','a').replace('ã','a').replace('ç','c').replace('õ','o')
+  return text 
+
+
 def build_evocucao(lists):
   build_categories = {}
   list_dates = []
@@ -24,7 +29,7 @@ def build_evocucao(lists):
   str_to_json = json.loads(df)
 
   for i, v in str_to_json.items():
-    name = i.lower().replace(' ', '_').replace('&', 'e').replace('á','a').replace('ã','a').replace('ç','c').replace('õ','o')
+    name = clear_text(i)
     build_categories[name] = {'values': [], 'label': ''}
     build_categories[name]['label'] = i
     for d in v.values():
@@ -101,7 +106,7 @@ def fetch_registers():
       build_listed = []
 
       for cat in get_to_create_list:
-        category_format = cat[0].lower().replace(' ', '_').replace('&', 'e').replace('á','a').replace('ã','a').replace('ç','c').replace('õ','o')
+        category_format = clear_text(cat[0])
         build_categories[category_format] = {}
         build_categories[category_format]['values'] = []
         build_categories[category_format]['dates'] = []
@@ -109,7 +114,7 @@ def fetch_registers():
         build_listed.append(category_format)
       
       for i in get_to_build_list:
-        cat_name = i[0].lower().replace(' ', '_').replace('&', 'e').replace('á','a').replace('ã','a').replace('ç','c').replace('õ','o')
+        cat_name = clear_text(i[0])
 
         if cat_name in build_listed:
           build_categories[cat_name]['values'].append(i[1])
