@@ -1,22 +1,16 @@
 # -*- coding: utf-8 -*-
-import os, sys, json, re
-import asyncio
-import pymongo
-import datetime
-import time
-import pandas as pd
-import numpy as np
-import pprint
+import os, sys, json, asyncio, pymongo, datetime, time, pandas as pd
 
 sys.path.append(os.path.abspath(os.getcwd()))
 
-from datetime import date, datetime as dt
 from flask import jsonify, request, Blueprint
 from bson.json_util import dumps, ObjectId
 from api_server.enviroment.enviroment import db
 from api_server.robots.get_status_code import get_status_code
 
+
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
+
 
 def build_evocucao(lists):
   build_categories = {}
@@ -42,21 +36,38 @@ def build_evocucao(lists):
   build_categories['dates'] = list_dates
   return build_categories
 
+
 def calcular_consolidado(lists):
-  consolidado = {
-    "total_credit": 0,
-    "total_debit": 0,
-    "total_consolidado": 0
-  }
+  consolidado = {}
+  consolidado['total_credit'] = 0
+  consolidado['total_debit'] = 0
+  consolidado['total_consolidado'] = 0
 
   for i in range(len(lists)):
     if lists[i]['type'] == 'incoming':
-        consolidado['total_credit'] += float(lists[i]['value'])
+      consolidado['total_credit'] += float(lists[i]['value'])
     elif lists[i]['type'] == 'outcoming':
-        consolidado['total_debit'] += float(lists[i]['value'])
+      consolidado['total_debit'] += float(lists[i]['value'])
 
   consolidado['total_consolidado'] += (consolidado['total_credit'] - consolidado['total_debit'])
   return consolidado
+
+
+def making_filter(days, todos):
+  rangeDates = []
+  filtered = {}
+
+  for i in range(0, days):
+    rangeDates.append((datetime.date.today() - datetime.timedelta(i)).isoformat())
+
+  if todos == None:
+    filtered['created_at'] = {
+      '$lte': time.time(), 
+      '$gte': float(time.mktime(datetime.datetime.strptime(rangeDates[-1], "%Y-%m-%d").timetuple()))
+    }
+
+  return filtered
+
 
 @dashboard.route("/fetch_evolucao", methods=["GET"])
 def fetch_evolucao():
@@ -66,9 +77,11 @@ def fetch_evolucao():
     data = build_evocucao(dumps(result))
     response = jsonify({'graph_evolution': data})
     response.status_code = 200
+
     return response
   except Exception as e:
     return not_found(e)
+
 
 @dashboard.route("/fetch_registers", methods=["GET"])
 def fetch_registers():
@@ -76,28 +89,13 @@ def fetch_registers():
     days = request.args.get('days', default=7, type=int)
     todos = request.args.get('todos', default=None, type=str)
     data = {'results': [] }
-    rangeDates = []
-    filtered = {}
-
-    for i in range(0, days):
-      rangeDates.append((datetime.date.today() - datetime.timedelta(i)).isoformat())
-
-    if todos == None:
-      filtered['created_at'] = {
-        '$lte': time.time(), 
-        '$gte': float(time.mktime(datetime.datetime.strptime(rangeDates[-1], "%Y-%m-%d").timetuple()))
-      }
+    result = list(db.collection_registers.find(making_filter(days, todos)).sort('created_at', pymongo.DESCENDING))
     
-    result = list(db.collection_registers.find(filtered).sort('created_at', pymongo.DESCENDING))
-
     if len(result) > 0:
-      # print(int(time.mktime(datetime.datetime.strptime(rangeDates[0], "%Y-%m-%d").timetuple())/1e3))
       dumps_result = dumps(result)
-      
       df = pd.read_json(dumps_result)
       get_to_create_list = pd.DataFrame(df['category']).drop_duplicates().values
       get_to_build_list = pd.DataFrame(df[['category', 'value', 'created_at', 'type']]).values
-
       build_categories = {}
       build_list = []
       build_listed = []
@@ -112,13 +110,14 @@ def fetch_registers():
       
       for i in get_to_build_list:
         cat_name = i[0].lower().replace(' ', '_').replace('&', 'e').replace('á','a').replace('ã','a').replace('ç','c').replace('õ','o')
+
         if cat_name in build_listed:
           build_categories[cat_name]['values'].append(i[1])
           build_categories[cat_name]['dates'].append(pd.Timestamp(i[2]).timestamp())
 
       str_to_json = json.loads(dumps_result)
       data['consolidado'] = calcular_consolidado(str_to_json)
-      
+
       for i in range(len(str_to_json)):
         data['results'].append(str_to_json[i])
       
@@ -127,6 +126,7 @@ def fetch_registers():
     
     response = jsonify({'data': data})
     response.status_code = 200
+
     return response
   except Exception as e:
     return not_found(e)
@@ -156,6 +156,7 @@ def calc_consolidado():
     
     response = jsonify(consolidado)
     response.status_code = 200
+
     return response
   except Exception as e:
     return not_found(e)
@@ -166,20 +167,21 @@ def update_one():
   try:
     payload = request.get_json()
     if not payload['_id']:
-        return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
+      return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
     
     find_id = ObjectId(payload['_id']['$oid'])
     find_result = db.collection_registers.find_one({"_id": find_id})
 
     if find_result != None and type(find_result) == dict:
-        del payload['_id']
-        result = db.collection_registers.update_one({"_id": find_id}, {"$set": payload})
-        if result.modified_count > 0:
-          return str(json.dumps({'status':200, 'msg':'Um registro foi modificado'})), 200
-        else:
-          return str(json.dumps({'status':200, 'msg': 'Nenhum registro foi modificado.'})), 200
+      del payload['_id']
+      result = db.collection_registers.update_one({"_id": find_id}, {"$set": payload})
+
+      if result.modified_count > 0:
+        return str(json.dumps({'status':200, 'msg':'Um registro foi modificado'})), 200
+      else:
+        return str(json.dumps({'status':200, 'msg': 'Nenhum registro foi modificado.'})), 200
     else:
-       return str(json.dumps({'status':404,"msg":"Registro não foi encontrado"})), 404
+      return str(json.dumps({'status':404,"msg":"Registro não foi encontrado"})), 404
   except Exception as e:
     return not_found(e)
 
@@ -191,27 +193,26 @@ def delete_one():
     payload = request.get_json()
 
     if not payload['_id']:
-        return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
+      return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
     
     find_id = ObjectId(payload['_id']['$oid'])
     find_result = db.collection_registers.find_one({"_id": find_id})
 
     if find_result != None and type(find_result) == dict:
-        del payload['_id']
-        db.collection_registers.delete_one({"_id": find_id})
-       
-        result = db.collection_registers.find()
-        dumps_result = dumps(result)
-        str_to_json = json.loads(dumps_result)
-        
-        data['consolidado'] = calcular_consolidado(str_to_json)
-        
-        for i in range(len(str_to_json)):
-            data['results'].append(str_to_json[i])
+      del payload['_id']
+      db.collection_registers.delete_one({"_id": find_id})
+      result = db.collection_registers.find()
+      dumps_result = dumps(result)
+      str_to_json = json.loads(dumps_result)
+      data['consolidado'] = calcular_consolidado(str_to_json)
 
-        response = jsonify({'status':200, 'msg': 'total de registros: ' + str(len(str_to_json)), 'data': data})
-        response.status_code = 200
-        return response
+      for i in range(len(str_to_json)):
+        data['results'].append(str_to_json[i])
+
+      response = jsonify({'status':200, 'msg': 'total de registros: ' + str(len(str_to_json)), 'data': data})
+      response.status_code = 200
+
+      return response
     else:
        return str(json.dumps({'status':404,"msg":"Registro não foi encontrado"})), 404
   except Exception as e:
@@ -222,6 +223,7 @@ def delete_one():
 def get_code():
   try:
     data = asyncio.run(get_status_code())
+
     return str(json.dumps(data)), 200
   except Exception as e:
     return not_found(e)
@@ -229,10 +231,13 @@ def get_code():
 
 def get_first_date(invs, salfer=False):
   dt_lower = time.time()
+
   for inv in invs:
     dt_inv = inv['created_at']
+
     if dt_inv < dt_lower:
         dt_lower = dt_inv
+
   return dt_lower
 
 
@@ -248,12 +253,14 @@ def get_last_date(invs):
         last_date = current_date
       elif current_date > last_date:
         last_date = current_date
+
   return last_date
 
 
 @dashboard.errorhandler(404)
 def not_found(error=None):
-    message = {'status': 500, 'message': 'page found' + request.url, 'error': error}
-    response = jsonify(message)
-    response.status_code = 500
-    return response
+  message = {'status': 500, 'message': 'page found' + request.url, 'error': error}
+  response = jsonify(message)
+  response.status_code = 500
+  
+  return response
