@@ -88,6 +88,24 @@ def fetch_evolucao():
     return not_found(e)
 
 
+@dashboard.route("/fetch_evolucao_detail", methods=["POST"])
+def fetch_evolucao_detail():
+  try:
+    data = {}
+    payload = request.get_json()
+    if not payload['_id']:
+      return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
+
+    find_id = ObjectId(payload['_id']['$oid'])
+    find_result = db.collection_registers.find_one({"_id": find_id})
+    data = build_evocucao(dumps(find_result))
+    response = jsonify({'graph_evolution': data})
+    response.status_code = 200
+    return response
+  except Exception as e:
+    return not_found(e)
+
+
 @dashboard.route("/fetch_registers", methods=["GET"])
 def fetch_registers():
   try:
@@ -98,35 +116,12 @@ def fetch_registers():
     
     if len(result) > 0:
       dumps_result = dumps(result)
-      df = pd.read_json(dumps_result)
-      get_to_create_list = pd.DataFrame(df['category']).drop_duplicates().values
-      get_to_build_list = pd.DataFrame(df[['category', 'value', 'created_at', 'type']]).values
-      build_categories = {}
-      build_list = []
-      build_listed = []
-
-      for cat in get_to_create_list:
-        category_format = clear_text(cat[0])
-        build_categories[category_format] = {}
-        build_categories[category_format]['values'] = []
-        build_categories[category_format]['dates'] = []
-        build_list.append(build_categories)
-        build_listed.append(category_format)
-      
-      for i in get_to_build_list:
-        cat_name = clear_text(i[0])
-
-        if cat_name in build_listed:
-          build_categories[cat_name]['values'].append(i[1])
-          build_categories[cat_name]['dates'].append(pd.Timestamp(i[2]).timestamp())
-
       str_to_json = json.loads(dumps_result)
       data['consolidado'] = calcular_consolidado(str_to_json)
 
       for i in range(len(str_to_json)):
         data['results'].append(str_to_json[i])
       
-      data['evolucao'] = build_categories
       data['total'] = len(str_to_json)
     
     response = jsonify({'data': data})
@@ -206,7 +201,7 @@ def delete_one():
     if find_result != None and type(find_result) == dict:
       del payload['_id']
       db.collection_registers.delete_one({"_id": find_id})
-      result = db.collection_registers.find()
+      result = list(db.collection_registers.find(making_filter(7, None)).sort('created_at', pymongo.DESCENDING))
       dumps_result = dumps(result)
       str_to_json = json.loads(dumps_result)
       data['consolidado'] = calcular_consolidado(str_to_json)
@@ -214,6 +209,7 @@ def delete_one():
       for i in range(len(str_to_json)):
         data['results'].append(str_to_json[i])
 
+      data['total'] = len(str_to_json)
       response = jsonify({'status':200, 'msg': 'total de registros: ' + str(len(str_to_json)), 'data': data})
       response.status_code = 200
 
