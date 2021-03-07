@@ -205,7 +205,10 @@ def update_one():
       result = db.collection_registers.update_one({"_id": find_id}, {"$set": payload})
 
       if result.modified_count > 0:
-        return str(json.dumps({'status':200, 'msg':'Um registro foi modificado'})), 200
+        data = db.collection_registers.find_one({"_id": find_id})
+        response = jsonify({'status':200, 'msg':'Um registro foi modificado', 'data': json.loads(dumps(data))})
+        response.status_code = 200
+        return response
       else:
         return str(json.dumps({'status':200, 'msg': 'Nenhum registro foi modificado.'})), 200
     else:
