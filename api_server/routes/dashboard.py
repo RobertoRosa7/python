@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath(os.getcwd()))
 
 from flask import jsonify, request, Blueprint
 from bson.json_util import dumps, ObjectId
-from api_server.enviroment.enviroment import db
+from api_server.enviroment.enviroment import db, set_mode
 from api_server.robots.get_status_code import get_status_code
 
 
@@ -72,6 +72,34 @@ def making_filter(days, todos):
     }
 
   return filtered
+
+
+def get_first_date(invs, salfer=False):
+  dt_lower = time.time()
+
+  for inv in invs:
+    dt_inv = inv['created_at']
+
+    if dt_inv < dt_lower:
+        dt_lower = dt_inv
+
+  return dt_lower
+
+
+def get_last_date(invs):
+  last_date = None
+  for inv in invs:
+    current_date = inv.get('created_at', None)
+    if not current_date or current_date > time.time():
+      last_date = time.time()
+      break
+    else:
+      if last_date == None:
+        last_date = current_date
+      elif current_date > last_date:
+        last_date = current_date
+
+  return last_date
 
 
 @dashboard.route("/fetch_evolucao", methods=["GET"])
@@ -228,33 +256,19 @@ def get_code():
   except Exception as e:
     return not_found(e)
 
+@dashboard.route('/set_dev_mode', methods=['POST'])
+def set_dev_mode():
+  try:
+    data = request.get_json()
+    mode = True if data['mode'] == 'dev-mode' else False
+    res = set_mode(mode)
+    text = 'dev-mode' if res else 'prod-mode'
 
-def get_first_date(invs, salfer=False):
-  dt_lower = time.time()
+    response = jsonify({'mode': text})
 
-  for inv in invs:
-    dt_inv = inv['created_at']
-
-    if dt_inv < dt_lower:
-        dt_lower = dt_inv
-
-  return dt_lower
-
-
-def get_last_date(invs):
-  last_date = None
-  for inv in invs:
-    current_date = inv.get('created_at', None)
-    if not current_date or current_date > time.time():
-      last_date = time.time()
-      break
-    else:
-      if last_date == None:
-        last_date = current_date
-      elif current_date > last_date:
-        last_date = current_date
-
-  return last_date
+    return response, 200
+  except Exception as e:
+    return not_found(e)
 
 
 @dashboard.errorhandler(404)
