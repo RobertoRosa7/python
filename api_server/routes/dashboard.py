@@ -17,15 +17,19 @@ def clear_text(text):
   return text 
 
 
-def build_evocucao(lists):
+def build_evocucao(tipo, lists):
   build_categories = {}
   list_dates = []
-
   df = pd.read_json(lists)
-  get_dates_list = pd.DataFrame(df['created_at']).drop_duplicates().values
-  df = df.drop(columns=['_id', 'position', 'description', 'user', 'edit', 'status', 'brand', 'updated_at'])
-  df = pd.DataFrame(df.groupby(['created_at', 'category']).sum()['value']).unstack(fill_value=0)['value'].to_json()
-  
+  df = df.drop(columns=['_id', 'position', 'description', 'user', 'edit', 'status', 'brand', 'updated_at','cat_icon', 'month'])
+
+  if tipo == 'despesas':
+    coming = df.loc[df.type == 'outcoming']
+  else:
+    coming = df.loc[df.type == 'incoming']
+
+  get_dates_list = pd.DataFrame(coming['created_at']).drop_duplicates().values
+  df = pd.DataFrame(coming.groupby(['created_at', 'category']).sum()['value']).unstack(fill_value=0)['value'].to_json()
   str_to_json = json.loads(df)
 
   for i, v in str_to_json.items():
@@ -47,12 +51,22 @@ def calcular_consolidado(lists):
   consolidado['total_credit'] = 0
   consolidado['total_debit'] = 0
   consolidado['total_consolidado'] = 0
+  consolidado['a_pagar'] = 0
+  consolidado['a_receber'] = 0
+
+  data_now = int(time.time())
 
   for i in range(len(lists)):
     if lists[i]['type'] == 'incoming':
-      consolidado['total_credit'] += float(lists[i]['value'])
+      if lists[i]['created_at'] <= data_now:
+        consolidado['total_credit'] += float(lists[i]['value'])
+      if lists[i]['status'] == 'pending':
+          consolidado['a_receber'] += float(lists[i]['value'])
     elif lists[i]['type'] == 'outcoming':
-      consolidado['total_debit'] += float(lists[i]['value'])
+        if lists[i]['created_at'] <= data_now:
+          consolidado['total_debit'] += float(lists[i]['value'])
+        if lists[i]['status'] == 'pending':
+          consolidado['a_pagar'] += float(lists[i]['value'])
 
   consolidado['total_consolidado'] += (consolidado['total_credit'] - consolidado['total_debit'])
   return consolidado
@@ -102,12 +116,25 @@ def get_last_date(invs):
   return last_date
 
 
+@dashboard.route("/fetch_evolucao_despesas", methods=["GET"])
+def fetch_evolucao_despesas():
+  try:
+    data = {}
+    result = list(db.collection_registers.find().sort('created_at', pymongo.ASCENDING))
+    data = build_evocucao('despesas', dumps(result))
+    response = jsonify({'graph_evolution': data})
+    response.status_code = 200
+
+    return response
+  except Exception as e:
+    return not_found(e)  
+
 @dashboard.route("/fetch_evolucao", methods=["GET"])
 def fetch_evolucao():
   try:
     data = {}
     result = list(db.collection_registers.find().sort('created_at', pymongo.ASCENDING))
-    data = build_evocucao(dumps(result))
+    data = build_evocucao('receita', dumps(result))
     response = jsonify({'graph_evolution': data})
     response.status_code = 200
 
@@ -164,7 +191,11 @@ def fetch_registers():
 def new_register():
   try:
     payload = request.json
-    payload['status'] = 'done'
+    data_now = int(time.time())
+
+    if payload['created_at'] <= data_now:
+      payload['status'] = 'done'
+
     db.collection_registers.insert(payload)
     response = jsonify({'status':200, 'msg': 'Registro adicionado'})
     response.status_code = 200
@@ -194,12 +225,16 @@ def calc_consolidado():
 def update_one():
   try:
     payload = request.get_json()
+    data_now = int(time.time())
+
     if not payload['_id']:
       return str(json.dumps({'status':404, 'msg':"id é obrigatório"})), 404
     
     find_id = ObjectId(payload['_id']['$oid'])
-    find_result = db.collection_registers.find_one({"_id": find_id})
 
+    payload['status'] = 'done' if payload['created_at'] <= data_now else 'pending'
+
+    find_result = db.collection_registers.find_one({"_id": find_id})
     if find_result != None and type(find_result) == dict:
       del payload['_id']
       result = db.collection_registers.update_one({"_id": find_id}, {"$set": payload})
@@ -258,6 +293,7 @@ def get_code():
     return str(json.dumps(data)), 200
   except Exception as e:
     return not_found(e)
+
 
 @dashboard.route('/set_dev_mode', methods=['POST'])
 def set_dev_mode():
