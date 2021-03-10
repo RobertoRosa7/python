@@ -15,6 +15,7 @@ mode = set_mode()
 PRIMEIROAPP_API_DEV = os.environ.get('PRIMEIROAPP_API_DEV')
 PRIMEIROAPP_API_PROD = os.environ.get('PRIMEIROAPP_API_PROD')
 
+# conn = MongoClient(host=PRIMEIROAPP_API_DEV, port=27017)
 conn = MongoClient(host=PRIMEIROAPP_API_PROD, port=27017)
 
 # client = MongoClient("mongodb+srv://beto:beto1234@cluster0.rt58f.mongodb.net/primeiroapp?retryWrites=true&w=majority")

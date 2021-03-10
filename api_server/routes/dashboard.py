@@ -21,26 +21,28 @@ def build_evocucao(tipo, lists):
   build_categories = {}
   list_dates = []
   df = pd.read_json(lists)
-  df = df.drop(columns=['_id', 'position', 'description', 'user', 'edit', 'status', 'brand', 'updated_at','cat_icon', 'month'])
+  df = df.drop(columns=['_id', 'position', 'description', 'user', 'edit', 'status', 'brand', 'updated_at'])
 
   if tipo == 'despesas':
     coming = df.loc[df.type == 'outcoming']
   else:
     coming = df.loc[df.type == 'incoming']
+    print(coming)
+  
+  if len(coming) > 0:
+    get_dates_list = pd.DataFrame(coming['created_at']).drop_duplicates().values
+    df = pd.DataFrame(coming.groupby(['created_at', 'category']).sum()['value']).unstack(fill_value=0)['value'].to_json()
+    str_to_json = json.loads(df)
 
-  get_dates_list = pd.DataFrame(coming['created_at']).drop_duplicates().values
-  df = pd.DataFrame(coming.groupby(['created_at', 'category']).sum()['value']).unstack(fill_value=0)['value'].to_json()
-  str_to_json = json.loads(df)
+    for i, v in str_to_json.items():
+      name = clear_text(i)
+      build_categories[name] = {'values': [], 'label': ''}
+      build_categories[name]['label'] = i
+      for d in v.values():
+        build_categories[name]['values'].append(d)
 
-  for i, v in str_to_json.items():
-    name = clear_text(i)
-    build_categories[name] = {'values': [], 'label': ''}
-    build_categories[name]['label'] = i
-    for d in v.values():
-      build_categories[name]['values'].append(d)
-
-  for d in get_dates_list:
-    list_dates.append(int(pd.Timestamp(d[0]).timestamp()))
+    for d in get_dates_list:
+      list_dates.append(int(pd.Timestamp(d[0]).timestamp()))
 
   build_categories['dates'] = list_dates
   return build_categories
@@ -56,17 +58,18 @@ def calcular_consolidado(lists):
 
   data_now = int(time.time())
 
-  for i in range(len(lists)):
-    if lists[i]['type'] == 'incoming':
-      if lists[i]['created_at'] <= data_now:
-        consolidado['total_credit'] += float(lists[i]['value'])
-      if lists[i]['status'] == 'pending':
-          consolidado['a_receber'] += float(lists[i]['value'])
-    elif lists[i]['type'] == 'outcoming':
+  if len(lists) > 0:
+    for i in range(len(lists)):
+      if lists[i]['type'] == 'incoming':
         if lists[i]['created_at'] <= data_now:
-          consolidado['total_debit'] += float(lists[i]['value'])
+          consolidado['total_credit'] += float(lists[i]['value'])
         if lists[i]['status'] == 'pending':
-          consolidado['a_pagar'] += float(lists[i]['value'])
+            consolidado['a_receber'] += float(lists[i]['value'])
+      elif lists[i]['type'] == 'outcoming':
+          if lists[i]['created_at'] <= data_now:
+            consolidado['total_debit'] += float(lists[i]['value'])
+          if lists[i]['status'] == 'pending':
+            consolidado['a_pagar'] += float(lists[i]['value'])
 
   consolidado['total_consolidado'] += (consolidado['total_credit'] - consolidado['total_debit'])
   return consolidado
@@ -103,7 +106,7 @@ def get_first_date(invs, salfer=False):
 def get_last_date(invs):
   last_date = None
   for inv in invs:
-    if inv.get('type') == 'outcoming' and inv.get('status') == 'done':
+    if inv.get('type') == 'outcoming' or inv.get('type') == 'incoming' and inv.get('status') == 'done':
       current_date = int(inv.get('created_at', None))
       if not current_date and current_date > time.time():
         last_date = time.time()
@@ -126,7 +129,10 @@ def fetch_evolucao_despesas():
   try:
     data = {}
     result = list(db.collection_registers.find().sort('created_at', pymongo.ASCENDING))
-    data = build_evocucao('despesas', dumps(result))
+    
+    if len(result) > 0:
+      data = build_evocucao('despesas', dumps(result))
+
     response = jsonify({'graph_evolution': data})
     response.status_code = 200
 
@@ -140,7 +146,10 @@ def fetch_evolucao():
   try:
     data = {}
     result = list(db.collection_registers.find().sort('created_at', pymongo.ASCENDING))
-    data = build_evocucao('receita', dumps(result))
+    
+    if len(result) > 0:
+      data = build_evocucao('receita', dumps(result))
+    
     response = jsonify({'graph_evolution': data})
     response.status_code = 200
 
@@ -176,11 +185,11 @@ def fetch_registers():
     data = {'results': [] }
     result = list(db.collection_registers.find(making_filter(days, todos)).sort('created_at', pymongo.DESCENDING))
     
-    if len(result) > 0:
-      dumps_result = dumps(result)
-      str_to_json = json.loads(dumps_result)
-      data['consolidado'] = calcular_consolidado(str_to_json)
+    dumps_result = dumps(result)
+    str_to_json = json.loads(dumps_result)
+    data['consolidado'] = calcular_consolidado(str_to_json)
 
+    if len(result) > 0:
       for i in range(len(str_to_json)):
         data['results'].append(str_to_json[i])
       
@@ -193,8 +202,8 @@ def fetch_registers():
       # convert timestamp to string
       # print(convert_timestamp_to_string(get_last_date(result)))
 
-      data['total'] = len(str_to_json)
-      data['total_geral'] = db.collection_registers.count()
+    data['total'] = len(str_to_json)
+    data['total_geral'] = db.collection_registers.count()
       
     response = jsonify({'data': data})
     response.status_code = 200
