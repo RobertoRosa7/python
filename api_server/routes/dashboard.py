@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, sys, json, asyncio, pymongo, datetime, time, pandas as pd, math
+import os, sys, json, asyncio, pymongo, datetime, time, pandas as pd, math, re
 
 sys.path.append(os.path.abspath(os.getcwd()))
 
@@ -121,7 +121,6 @@ def convert_timestamp_to_string(timestamp):
   return time.strftime('%Y-%m-%d', time.localtime(timestamp))
 
 
-
 @dashboard.route("/fetch_evolucao_despesas", methods=["GET"])
 def fetch_evolucao_despesas():
   try:
@@ -196,7 +195,7 @@ def fetch_registers():
 
       data['total'] = len(str_to_json)
       data['total_geral'] = db.collection_registers.count()
-
+      
     response = jsonify({'data': data})
     response.status_code = 200
 
@@ -324,6 +323,25 @@ def set_dev_mode():
     response = jsonify({'mode': text})
 
     return response, 200
+  except Exception as e:
+    return not_found(e)
+
+
+@dashboard.route('/get_list_autocomplete', methods=["GET"])
+def get_list_autocomplete():
+  try:
+    list_autocomplete = {}
+    registers_list = list(db.collection_registers.find({}))
+    df = pd.read_json(dumps(registers_list))
+
+    # repl = re.compile(r'á', flags=re.IGNORECASE)
+    # descriptions_list = df.description.str.lower().str.replace('á', 'a').str.replace('-', '').str.replace(',', '').values
+    # list_autocomplete['desc'] = pd.DataFrame(df['description']).describe().to_dict()['description']
+    list_autocomplete['list'] = df['description'].drop_duplicates().sort_values().values
+    response = jsonify(json.loads(dumps(list_autocomplete)))
+    response.status_code = 200
+
+    return response
   except Exception as e:
     return not_found(e)
 
