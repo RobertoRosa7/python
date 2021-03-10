@@ -133,3 +133,36 @@
 ###### 03/03/2021
 
 * [x] Grafico de evolucao com pandas
+
+###### 05/03/2021
+
+* [x] Dialog Geral para mostrar detalhes 
+
+###### 07/03/2021
+
+* [x] Novo layout para detalhes de registro
+* [x] Download de registro
+* [x] Editar registro
+* [x] Deletar registro
+
+###### 08/03/2021
+
+* [x] Progress bar receita vs despesas
+* [x] A receber, A pagar
+* [x] Download PDF estrutra e modulos implementado - falta página 
+* [x] Grafico despesas, grafico de receita
+* [x] Lançamento futuros
+* [x] Filtro de pendentes
+
+###### 09/03/2021
+
+* [x] Ajustes no CSS e HTML para pagina de registros
+* [x] Método de imprimir
+* [x] Novo Layout de impressão
+
+###### 10/03/2021
+
+* [x] Alteração no campo de busca
+* [x] Implementação de autocomplete
+* [x] Actions, mais redux com effect busca autocomplete lista
+* [x] Salvar cópia da lista autocomplete no indexedb
