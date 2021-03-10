@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, sys, json, asyncio, pymongo, datetime, time, pandas as pd
+import os, sys, json, asyncio, pymongo, datetime, time, pandas as pd, math
 
 sys.path.append(os.path.abspath(os.getcwd()))
 
@@ -97,23 +97,29 @@ def get_first_date(invs, salfer=False):
     if dt_inv < dt_lower:
         dt_lower = dt_inv
 
-  return dt_lower
+  return int(dt_lower)
 
 
 def get_last_date(invs):
   last_date = None
   for inv in invs:
-    current_date = inv.get('created_at', None)
-    if not current_date or current_date > time.time():
-      last_date = time.time()
-      break
-    else:
-      if last_date == None:
-        last_date = current_date
-      elif current_date > last_date:
-        last_date = current_date
+    if inv.get('type') == 'outcoming' and inv.get('status') == 'done':
+      current_date = int(inv.get('created_at', None))
+      if not current_date and current_date > time.time():
+        last_date = time.time()
+        break
+      else:
+        if last_date == None:
+          last_date = current_date
+        elif current_date > last_date:
+          last_date = current_date
 
-  return last_date
+  return int(last_date)
+
+
+def convert_timestamp_to_string(timestamp):
+  return time.strftime('%Y-%m-%d', time.localtime(timestamp))
+
 
 
 @dashboard.route("/fetch_evolucao_despesas", methods=["GET"])
@@ -128,6 +134,7 @@ def fetch_evolucao_despesas():
     return response
   except Exception as e:
     return not_found(e)  
+
 
 @dashboard.route("/fetch_evolucao", methods=["GET"])
 def fetch_evolucao():
@@ -156,6 +163,7 @@ def fetch_evolucao_detail():
     data = build_evocucao(dumps(find_result))
     response = jsonify({'graph_evolution': data})
     response.status_code = 200
+
     return response
   except Exception as e:
     return not_found(e)
@@ -177,8 +185,18 @@ def fetch_registers():
       for i in range(len(str_to_json)):
         data['results'].append(str_to_json[i])
       
+      registers_list = list(db.collection_registers.find({}))
+      date_media = get_last_date(result) - get_first_date(registers_list)
+
+      # total de dias entre o registro mais antigo e o mais recente
+      data['days'] = math.ceil(date_media / (3600 * 24))
+
+      # convert timestamp to string
+      # print(convert_timestamp_to_string(get_last_date(result)))
+
       data['total'] = len(str_to_json)
-    
+      data['total_geral'] = db.collection_registers.count()
+
     response = jsonify({'data': data})
     response.status_code = 200
 
