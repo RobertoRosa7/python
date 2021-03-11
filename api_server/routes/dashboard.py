@@ -27,7 +27,6 @@ def build_evocucao(tipo, lists):
     coming = df.loc[df.type == 'outcoming']
   else:
     coming = df.loc[df.type == 'incoming']
-    print(coming)
   
   if len(coming) > 0:
     get_dates_list = pd.DataFrame(coming['created_at']).drop_duplicates().values
@@ -348,6 +347,23 @@ def get_list_autocomplete():
     # list_autocomplete['desc'] = pd.DataFrame(df['description']).describe().to_dict()['description']
     list_autocomplete['list'] = df['description'].drop_duplicates().sort_values().values
     response = jsonify(json.loads(dumps(list_autocomplete)))
+    response.status_code = 200
+
+    return response
+  except Exception as e:
+    return not_found(e)
+
+
+@dashboard.route('/search', methods=["GET"])
+def search():
+  try:
+    list_search = {}
+    search = request.args.get('search', default='', type=str)
+    registers_list = list(db.collection_registers.find({'description':search}))
+
+    list_search['search'] = registers_list
+    
+    response = jsonify(json.loads(dumps(list_search)))
     response.status_code = 200
 
     return response
