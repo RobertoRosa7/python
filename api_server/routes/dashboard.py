@@ -338,14 +338,13 @@ def set_dev_mode():
 @dashboard.route('/get_list_autocomplete', methods=["GET"])
 def get_list_autocomplete():
   try:
-    list_autocomplete = {}
+    list_autocomplete = {'list': []}
     registers_list = list(db.collection_registers.find({}))
-    df = pd.read_json(dumps(registers_list))
 
-    # repl = re.compile(r'á', flags=re.IGNORECASE)
-    # descriptions_list = df.description.str.lower().str.replace('á', 'a').str.replace('-', '').str.replace(',', '').values
-    # list_autocomplete['desc'] = pd.DataFrame(df['description']).describe().to_dict()['description']
-    list_autocomplete['list'] = df['description'].drop_duplicates().sort_values().values
+    if len(registers_list) > 0:
+      df = pd.read_json(dumps(registers_list))
+      list_autocomplete['list'] = df['description'].drop_duplicates().sort_values().values
+      
     response = jsonify(json.loads(dumps(list_autocomplete)))
     response.status_code = 200
 
