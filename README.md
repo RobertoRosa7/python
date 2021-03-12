@@ -166,3 +166,11 @@
 * [x] Implementação de autocomplete
 * [x] Actions, mais redux com effect busca autocomplete lista
 * [x] Salvar cópia da lista autocomplete no indexedb
+
+###### 12/03/2021
+
+* [x] Login
+* [x] Send Email
+* [x] Token
+* [x] Template send email
+* [x] Send email to verification

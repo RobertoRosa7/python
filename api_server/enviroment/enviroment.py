@@ -4,13 +4,7 @@ sys.path.append(os.path.abspath(os.getcwd()))
 
 from pymongo import MongoClient
 
-
-def set_mode(dev_mode=True):
-  return dev_mode
-
-mode = set_mode()
-
-# PRIMEIROAPP_API = os.environ.get('PRIMEIROAPP_API_DEV') if mode else os.environ.get('PRIMEIROAPP_API_PROD')
+API = 'http://localhost:4200' # frontend api
 
 PRIMEIROAPP_API_DEV = os.environ.get('PRIMEIROAPP_API_DEV')
 PRIMEIROAPP_API_PROD = os.environ.get('PRIMEIROAPP_API_PROD')

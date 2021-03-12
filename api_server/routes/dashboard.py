@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath(os.getcwd()))
 
 from flask import jsonify, request, Blueprint
 from bson.json_util import dumps, ObjectId
-from api_server.enviroment.enviroment import db, set_mode
+from api_server.enviroment.enviroment import db
 from api_server.robots.get_status_code import get_status_code
 
 
@@ -320,19 +320,18 @@ def get_code():
     return not_found(e)
 
 
-@dashboard.route('/set_dev_mode', methods=['POST'])
-def set_dev_mode():
-  try:
-    data = request.get_json()
-    mode = True if data['mode'] == 'dev-mode' else False
-    res = set_mode(mode)
-    text = 'dev-mode' if res else 'prod-mode'
+# @dashboard.route('/set_dev_mode', methods=['POST'])
+# def set_dev_mode():
+#   try:
+#     data = request.get_json()
+#     mode = True if data['mode'] == 'dev-mode' else False
+#     text = 'dev-mode' if res else 'prod-mode'
 
-    response = jsonify({'mode': text})
+#     response = jsonify({'mode': text})
 
-    return response, 200
-  except Exception as e:
-    return not_found(e)
+#     return response, 200
+#   except Exception as e:
+#     return not_found(e)
 
 
 @dashboard.route('/get_list_autocomplete', methods=["GET"])

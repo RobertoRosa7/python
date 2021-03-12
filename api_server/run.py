@@ -14,13 +14,14 @@ from bson.json_util import dumps
 
 from api_server.routes.home import home
 from api_server.routes.dashboard import dashboard
-
+from api_server.routes.login import my_login
 
 app = Flask(__name__)
 # app.secret_key = 'secretkey'
 # app.config['MONGO_URI'] = 'mongodb://localhost:27017/primeiroapp'
 
 
+app.register_blueprint(my_login)
 app.register_blueprint(home)
 app.register_blueprint(dashboard)
 
