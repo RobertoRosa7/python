@@ -1,6 +1,5 @@
-
 # -*- coding: utf-8 -*-
-import os, sys
+import os, sys, re
 
 from flask.globals import request
 
@@ -11,9 +10,52 @@ from api_server.routes.auth import login_required
 from api_server.utils.LoginManager import LoginManager
 from api_server.enviroment.enviroment import db, API
 from api_server.utils.SendEmail import SendEmail
-
+from api_server.utils.gets import set_user, get_user
+from bson.json_util import ObjectId
 
 my_login = Blueprint("my_login", __name__, url_prefix="/login")
+
+
+def valida_sufixos_hosts_email(email):
+    suffixes = ['con', 'com.bt', 'combr', 'xom', 'vom', 'ckm', 'c', 'clm']
+    hosts = ['gmai', 'yaho', 'outlok', 'gnail', 'hotmai', 'gmaol', 'gemail', 'outloo', 'ganil', 'gamil', 'hotnail', 'g.mail', 'gmnail', 'hotmaim', 'hotmais', 'hotmaiil', 'msm']
+
+    splitAddress = email.split('@')
+    splitAddress = splitAddress[1].split('.')
+    if splitAddress[0] in hosts:
+      return False
+    else:
+      addr = ('.').join(splitAddress[1:])
+      if addr in suffixes:
+          return False
+
+    return True
+
+
+@my_login.route('/signin', methods=['POST'])
+# @login_required
+def sign_in():
+  login_manager = LoginManager()
+  payload = request.get_json()
+
+  if 'email' not in payload:
+    return jsonify({"message": 'Campo e-mail é obrigatório'}), 400
+
+  try:
+    user = db.collection_users.find_one({'email': payload['email']})
+    check_pass = login_manager.check_password(payload['password'], user['password'])
+
+    if not check_pass and user:
+      return jsonify({"message": 'E-mail ou senha inválidos'}), 400
+
+    if isinstance(user['_id'], ObjectId):
+      user['_id'] = str(user['_id'])
+
+    token = login_manager.generate_auth_token(user)
+    set_user('user', user)
+    return {'email': user['email'],'access_token': token.decode('ascii'),'id': str(user['_id'])}
+  except Exception as e:
+    return make_response(jsonify({"message": 'Error interno no servidor'}), 500)
 
 
 @my_login.route('/signup', methods=['POST'])
@@ -24,8 +66,18 @@ def create_user():
 
     if 'email' not in data:
       return jsonify({"message": 'Campo e-mail é obrigatório'}), 400
-    
-    user = {'email': data['email'], 'password': login_manager.password_to_hash(data['password'])}
+
+    regex = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$'
+    match = re.match(regex, data['email'].lower())
+
+    if match is None or not valida_sufixos_hosts_email(data['email']):
+        return make_response(jsonify({"message": 'Campo e-mail inválido'}), 400)
+
+    user = {
+      **data,
+      'email': data['email'], 
+      'password': login_manager.password_to_hash(data['password'])
+      }
     user_exists = db.collection_users.find_one({'email': user['email']})
     there_is_user = user_exists if user_exists else {}
 
