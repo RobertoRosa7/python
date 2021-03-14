@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, sys, re
+import os, sys, re, base64
 
 from flask.globals import request
 
@@ -19,51 +19,59 @@ my_login = Blueprint("my_login", __name__, url_prefix="/login")
 def valida_sufixos_hosts_email(email):
     suffixes = ['con', 'com.bt', 'combr', 'xom', 'vom', 'ckm', 'c', 'clm']
     hosts = ['gmai', 'yaho', 'outlok', 'gnail', 'hotmai', 'gmaol', 'gemail', 'outloo', 'ganil', 'gamil', 'hotnail', 'g.mail', 'gmnail', 'hotmaim', 'hotmais', 'hotmaiil', 'msm']
-
     splitAddress = email.split('@')
     splitAddress = splitAddress[1].split('.')
+    
     if splitAddress[0] in hosts:
       return False
     else:
       addr = ('.').join(splitAddress[1:])
       if addr in suffixes:
-          return False
-
+        return False
     return True
 
 
-@my_login.route('/signin', methods=['POST'])
-# @login_required
+@my_login.route('/signin', methods=['GET'])
 def sign_in():
-  login_manager = LoginManager()
-  payload = request.get_json()
+  access = request.headers.get('Authorization')
 
-  if 'email' not in payload:
+  if not access:
+    return jsonify({"message": 'e-mail e senha é obrigatório'}), 400
+  
+  access = access.split(':')
+  access_email = base64.b64decode(access[0])
+  access_pass = base64.b64decode(access[1])
+  
+  if not access_email or not access_pass:
     return jsonify({"message": 'Campo e-mail é obrigatório'}), 400
-
+  
   try:
-    user = db.collection_users.find_one({'email': payload['email']})
-    check_pass = login_manager.check_password(payload['password'], user['password'])
-
-    if not check_pass and user:
+    login_manager = LoginManager()
+    user = db.collection_users.find_one({'email': access_email.decode('ascii')})
+    check_pass = login_manager.check_password(access_pass.decode('ascii'), user['password'])
+  
+    if not user:
+      return jsonify({"message": 'E-mail não encontrado'}), 400
+    if not check_pass:
       return jsonify({"message": 'E-mail ou senha inválidos'}), 400
-
+  
     if isinstance(user['_id'], ObjectId):
       user['_id'] = str(user['_id'])
-
+  
     token = login_manager.generate_auth_token(user)
     set_user('user', user)
+  
     return {'email': user['email'],'access_token': token.decode('ascii'),'id': str(user['_id'])}
   except Exception as e:
-    return make_response(jsonify({"message": 'Error interno no servidor'}), 500)
+    return jsonify({"message": 'Error interno no servidor'}), 500
 
 
 @my_login.route('/signup', methods=['POST'])
 def create_user():
   data = request.get_json()
   login_manager = LoginManager()
-  try:
 
+  try:
     if 'email' not in data:
       return jsonify({"message": 'Campo e-mail é obrigatório'}), 400
 
@@ -71,18 +79,19 @@ def create_user():
     match = re.match(regex, data['email'].lower())
 
     if match is None or not valida_sufixos_hosts_email(data['email']):
-        return make_response(jsonify({"message": 'Campo e-mail inválido'}), 400)
+      return make_response(jsonify({"message": 'Campo e-mail inválido'}), 400)
 
     user = {
       **data,
       'email': data['email'], 
       'password': login_manager.password_to_hash(data['password'])
       }
+
     user_exists = db.collection_users.find_one({'email': user['email']})
     there_is_user = user_exists if user_exists else {}
 
     if 'password' in there_is_user:
-        return jsonify({'message': 'Usuário já cadastro', 'status': 406}), 406
+      return jsonify({'message': 'Usuário já cadastro', 'status': 406}), 406
     else:
       user_temp = user
       user_temp['_id'] = db.collection_users.insert_one(user).inserted_id
@@ -90,7 +99,6 @@ def create_user():
     user_temp['_id'] = str(user_temp['_id'])
     token = login_manager.generate_auth_token(user_temp, 600000).decode('ascii')
     template = render_template('bem-vindo.html', nome=user_temp['email'], token=token, api_url=API)
-    
     mail = SendEmail()
     mail.send_verify_email(template, user_temp['email'])
 
