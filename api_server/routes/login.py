@@ -17,18 +17,18 @@ my_login = Blueprint("my_login", __name__, url_prefix="/login")
 
 
 def valida_sufixos_hosts_email(email):
-    suffixes = ['con', 'com.bt', 'combr', 'xom', 'vom', 'ckm', 'c', 'clm']
-    hosts = ['gmai', 'yaho', 'outlok', 'gnail', 'hotmai', 'gmaol', 'gemail', 'outloo', 'ganil', 'gamil', 'hotnail', 'g.mail', 'gmnail', 'hotmaim', 'hotmais', 'hotmaiil', 'msm']
-    splitAddress = email.split('@')
-    splitAddress = splitAddress[1].split('.')
-    
-    if splitAddress[0] in hosts:
+  suffixes = ['con', 'com.bt', 'combr', 'xom', 'vom', 'ckm', 'c', 'clm']
+  hosts = ['gmai', 'yaho', 'outlok', 'gnail', 'hotmai', 'gmaol', 'gemail', 'outloo', 'ganil', 'gamil', 'hotnail', 'g.mail', 'gmnail', 'hotmaim', 'hotmais', 'hotmaiil', 'msm']
+  splitAddress = email.split('@')
+  splitAddress = splitAddress[1].split('.')
+  
+  if splitAddress[0] in hosts:
+    return False
+  else:
+    addr = ('.').join(splitAddress[1:])
+    if addr in suffixes:
       return False
-    else:
-      addr = ('.').join(splitAddress[1:])
-      if addr in suffixes:
-        return False
-    return True
+  return True
 
 
 @my_login.route('/signin', methods=['GET'])
@@ -105,3 +105,28 @@ def create_user():
     return jsonify({"message": 'Usuário cadastrado com sucesso'}), 201
   except Exception as e:
     return {'message': 'Error %s' % repr(e), 'status': 500}, 500
+
+
+@my_login.route('/reset_password', methods=['POST'])
+def reset_password():
+  try:
+    payload = request.get_json()
+
+    if not payload['email']:
+      return jsonify({"message": 'Campo e-mail inválido'}), 400
+
+    login_manager = LoginManager()
+    user_exists = db.collection_users.find_one({'email': payload['email']})
+    
+    if user_exists is not None:
+      user_exists['_id'] = str(user_exists['_id'])
+      token = login_manager.generate_auth_token(user_exists, 600000).decode('ascii')
+      template = render_template('reset_password.html', email=payload['email'], token=token, api_url=API)
+      mail = SendEmail()
+      mail.send_verify_email(template, payload['email'])
+     
+      return {'status': 200, 'message': 'Email de recuperaçao de senha enviado.'}, 200
+    else:
+      return {'status': 400, 'message': 'Email invalido.'}, 400
+  except Exception as e:
+    return {'message': 'Error %s' % repr(e), 'status': 500}, 500  

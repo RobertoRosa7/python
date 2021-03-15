@@ -174,3 +174,7 @@
 * [x] Token
 * [x] Template send email
 * [x] Send email to verification
+
+###### 14/03/2021
+
+* [x] Email de recuperação de senha
