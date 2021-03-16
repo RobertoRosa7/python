@@ -48,13 +48,18 @@ def sign_in():
   try:
     login_manager = LoginManager()
     user = db.collection_users.find_one({'email': access_email.decode('ascii')})
-    check_pass = login_manager.check_password(access_pass.decode('ascii'), user['password'])
-  
+    
     if not user:
-      return jsonify({"message": 'E-mail não encontrado'}), 400
+      return jsonify({"message": 'E-mail não cadastrado'}), 400
+    
+    check_pass = login_manager.check_password(access_pass.decode('ascii'), user['password'])
+
     if not check_pass:
       return jsonify({"message": 'E-mail ou senha inválidos'}), 400
-  
+
+    if not user['verified']:
+      return jsonify({"message": 'E-mail não foi verificado'}), 400
+
     if isinstance(user['_id'], ObjectId):
       user['_id'] = str(user['_id'])
   
@@ -130,3 +135,22 @@ def reset_password():
       return {'status': 400, 'message': 'Email invalido.'}, 400
   except Exception as e:
     return {'message': 'Error %s' % repr(e), 'status': 500}, 500  
+
+
+@my_login.route('/login_verified', methods=['POST'])
+def login_verified():
+  payload = request.get_json()
+  login_manager = LoginManager()
+
+  if not payload['token']:
+    return jsonify({'message': 'Nenhum token recebido!'}), 400
+
+  token = payload['token']
+  token_verified = login_manager.verify_auth_token(token, db.collection_users, purge_private=True)
+  
+  if not token_verified:
+    return jsonify({'message', 'token inválido ou experiado'}), 400
+
+  db.collection_users.update({'email': token_verified['email']}, {'$set': {'verified': True}})
+
+  return {'message': 'E-mail verificado!'}, 200

@@ -12,13 +12,13 @@ class TokenManager:
   def verify_token(private_key, token):
     data = None
     try:
-        data = Serializer(private_key).loads(token)
+      data = Serializer(private_key).loads(token)
     except SignatureExpired:
-        print('Token expirado')
-        pass
+      print('Token expirado')
+      pass
     except BadSignature:
-        print('Token Invalido')
-        pass
+      print('Token Invalido')
+      pass
     return data
 
 
@@ -27,17 +27,15 @@ class LoginManager(TokenManager):
   SECRET_KEY = 'Y308A10EQVQOFMBIXFMYZZCSGV6CUF8M'
   SECRET_KEY_ASSESSOR = 'Z208A10FQVQOFMBIXFMYZZCSGV6CUF8M'
 
-  # @classmethod
-  # def _purge_private_data(cls, user: dict):
-  #   usuario = user.get("usuario", {})
-  #   if "password" in usuario:
-  #       del usuario["password"]
-  #   user["usuario"] = usuario
-  #   return user
+  @classmethod
+  def _purge_private_data(cls, user: dict):
+    if "password" in user:
+      del user["password"]
+    return user
 
   # Codifica a senha para ser gravada no banco de dados
-  # def password_to_hash(self, password):
-  #   return pwd_context.encrypt(password)
+  def password_to_hash(self, password):
+    return pwd_context.encrypt(password)
   
   # Decodifica a senha do usuario e compara com a senha do banco de dados
   def check_password(self, password, dbpassword):
@@ -48,39 +46,39 @@ class LoginManager(TokenManager):
     return self.generate_token(self.SECRET_KEY, {'_id': user_var['_id']}, expiration=expiration)
 
   # def generate_auth_token_for_assessor_chat(self, user_var, expiration=2628000000):
-  #     return self.generate_token(self.SECRET_KEY_ASSESSOR, {'_id': user_var['_id']}, expiration=expiration)
+  #  return self.generate_token(self.SECRET_KEY_ASSESSOR, {'_id': user_var['_id']}, expiration=expiration)
 
-  # def get_objectid_from_token(self, token):
-  #     data = self.verify_token(self.SECRET_KEY, token)
-  #     if not data:
-  #         return False
-  #     return data['_id']
+  def get_objectid_from_token(self, token):
+      data = self.verify_token(self.SECRET_KEY, token)
+      if not data:
+          return False
+      return data['_id']
 
-  # def verify_auth_token(self, token, collection, purge_private=False):
-  #   if not token:
-  #       return False
-  #   data = self.verify_token(self.SECRET_KEY, token)
-  #   if not data:
-  #       return False
+  def verify_auth_token(self, token, collection, purge_private=False):
+    if not token:
+      return False
+    data = self.verify_token(self.SECRET_KEY, token)
+    if not data:
+      return False
 
-  #   try:
-  #       _id = data['_id']
-  #       user = collection.find_one({'_id': ObjectId(_id)}, {"usuario": True, "_id": True})
-  #   except:
-  #       if type(data['id']) is str:
-  #           import json
-  #           _id = json.loads(data['id'])
-  #       else:
-  #           _id = data['id']
-  #       if '$oid' in _id:
-  #           user = collection.find_one({'_id': ObjectId(_id['$oid'])}, {"usuario": True, "_id": True})
-  #       else:
-  #           user = collection.find_one({'_id': ObjectId(_id)}, {"usuario": True, "_id": True})
+    try:
+      _id = data['_id']
+      user = collection.find_one({'_id': ObjectId(_id)})
+    except:
+      if type(data['id']) is str:
+        import json
+        _id = json.loads(data['id'])
+      else:
+        _id = data['id']
+      if '$oid' in _id:
+        user = collection.find_one({'_id': ObjectId(_id['$oid'])})
+      else:
+        user = collection.find_one({'_id': ObjectId(_id)})
 
-  #   if user is None:
-  #       return None
-  #   user['_id'] = str(user['_id'])
-  #   return user if not purge_private else self._purge_private_data(user)
+    if user is None:
+      return None
+    user['_id'] = str(user['_id'])
+    return user if not purge_private else self._purge_private_data(user)
 
   # def verify_auth_token_for_assessor(self, token, collection):
   #   data = self.verify_token(self.SECRET_KEY_ASSESSOR, token)
