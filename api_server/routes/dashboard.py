@@ -369,10 +369,6 @@ def search():
     return not_found(e)
 
 
-@dashboard.errorhandler(404)
-def not_found(error=None):
-  message = {'status': 500, 'message': 'page found' + request.url, 'error': error}
-  response = jsonify(message)
-  response.status_code = 500
-  
-  return response
+@dashboard.errorhandler(500)
+def not_found(e=None):
+ return {'message': 'Error %s' % repr(e), 'status': 500}, 500  

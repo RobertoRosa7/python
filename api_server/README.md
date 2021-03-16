@@ -83,6 +83,8 @@
 
 ###### 16/03/2021
 
-* [] Implementar endpoint pra reset password
-* [] Template para nova senha ao reset password
-* [] Enviar email com token para reset password
+* [x] Implementar endpoint pra reset password
+* [x] Template para nova senha ao reset password
+* [x] Enviar email com token para reset password
+* [x] Atualizar nova senha
+* [x] Verificar se email existe para atualização
