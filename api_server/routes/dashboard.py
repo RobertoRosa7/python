@@ -7,15 +7,14 @@ from flask import jsonify, request, Blueprint
 from bson.json_util import dumps, ObjectId
 from api_server.enviroment.enviroment import db
 from api_server.robots.get_status_code import get_status_code
-
+from api_server.utils.gets import get_user
+from api_server.routes.auth import login_required
 
 dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard")
-
 
 def clear_text(text):
   text.lower().replace(' ', '_').replace('&', 'e').replace('á','a').replace('ã','a').replace('ç','c').replace('õ','o')
   return text 
-
 
 def build_evocucao(tipo, lists):
   build_categories = {}
@@ -46,7 +45,6 @@ def build_evocucao(tipo, lists):
   build_categories['dates'] = list_dates
   return build_categories
 
-
 def calcular_consolidado(lists):
   consolidado = {}
   consolidado['total_credit'] = 0
@@ -73,10 +71,9 @@ def calcular_consolidado(lists):
   consolidado['total_consolidado'] += (consolidado['total_credit'] - consolidado['total_debit'])
   return consolidado
 
-
-def making_filter(days, todos):
+def making_filter(days, todos, user):
   rangeDates = []
-  filtered = {}
+  filtered = {'user.email': user['email']}
 
   for i in range(0, days):
     rangeDates.append((datetime.date.today() - datetime.timedelta(i)).isoformat())
@@ -89,7 +86,6 @@ def making_filter(days, todos):
 
   return filtered
 
-
 def get_first_date(invs, salfer=False):
   dt_lower = time.time()
 
@@ -100,7 +96,6 @@ def get_first_date(invs, salfer=False):
         dt_lower = dt_inv
 
   return int(dt_lower)
-
 
 def get_last_date(invs):
   last_date = None
@@ -118,16 +113,16 @@ def get_last_date(invs):
 
   return int(last_date)
 
-
 def convert_timestamp_to_string(timestamp):
   return time.strftime('%Y-%m-%d', time.localtime(timestamp))
 
-
 @dashboard.route("/fetch_evolucao_despesas", methods=["GET"])
+@login_required
 def fetch_evolucao_despesas():
   try:
+    user = get_user()
     data = {}
-    result = list(db.collection_registers.find().sort('created_at', pymongo.ASCENDING))
+    result = list(db.collection_registers.find({'user.email': user['email']}).sort('created_at', pymongo.ASCENDING))
     
     if len(result) > 0:
       data = build_evocucao('despesas', dumps(result))
@@ -139,12 +134,13 @@ def fetch_evolucao_despesas():
   except Exception as e:
     return not_found(e)  
 
-
 @dashboard.route("/fetch_evolucao", methods=["GET"])
+@login_required
 def fetch_evolucao():
   try:
+    user = get_user()
     data = {}
-    result = list(db.collection_registers.find().sort('created_at', pymongo.ASCENDING))
+    result = list(db.collection_registers.find({'user.email': user['email']}).sort('created_at', pymongo.ASCENDING))
     
     if len(result) > 0:
       data = build_evocucao('receita', dumps(result))
@@ -156,8 +152,8 @@ def fetch_evolucao():
   except Exception as e:
     return not_found(e)
 
-
 @dashboard.route("/fetch_evolucao_detail", methods=["POST"])
+@login_required
 def fetch_evolucao_detail():
   try:
     data = {}
@@ -175,14 +171,16 @@ def fetch_evolucao_detail():
   except Exception as e:
     return not_found(e)
 
-
 @dashboard.route("/fetch_registers", methods=["GET"])
+@login_required
 def fetch_registers():
   try:
+    user = get_user()
     days = request.args.get('days', default=7, type=int)
     todos = request.args.get('todos', default=None, type=str)
     data = {'results': [] }
-    result = list(db.collection_registers.find(making_filter(days, todos)).sort('created_at', pymongo.DESCENDING))
+    result = list(db.collection_registers.find(making_filter(days, todos, user)).sort('created_at', pymongo.DESCENDING))
+    # result = list(db.collection_registers.find({'user.email': user['email']}).sort('created_at', pymongo.DESCENDING))
     
     dumps_result = dumps(result)
     str_to_json = json.loads(dumps_result)
@@ -206,13 +204,18 @@ def fetch_registers():
       
     response = jsonify({'data': data})
     response.status_code = 200
+    
+    # user = db.collection_users.find_one({'email':'kakashi.kisura7@gmail.com'})
+    # is_update = db.collection_registers.update_many({}, {'$set': {'user': user}})
+
+    # print(is_update)
 
     return response
   except Exception as e:
     return not_found(e)
 
-
 @dashboard.route("/new_register", methods=["POST"])
+@login_required
 def new_register():
   try:
     payload = request.json
@@ -229,11 +232,12 @@ def new_register():
   except Exception as e:
    return not_found(e)
 
-
 @dashboard.route("/calc_consolidado", methods=["GET"])
+@login_required
 def calc_consolidado():
   try:
-    result = db.collection_registers.find().sort('created_at', pymongo.DESCENDING)
+    user = get_user()
+    result = db.collection_registers.find({'user.email':user['email']}).sort('created_at', pymongo.DESCENDING)
     dumps_result = dumps(result)
     str_to_json = json.loads(dumps_result)
     consolidado = calcular_consolidado(str_to_json)
@@ -245,8 +249,8 @@ def calc_consolidado():
   except Exception as e:
     return not_found(e)
 
-
 @dashboard.route('/update_register', methods=['POST'])
+@login_required
 def update_one():
   try:
     payload = request.get_json()
@@ -276,8 +280,8 @@ def update_one():
   except Exception as e:
     return not_found(e)
 
-
 @dashboard.route('/delete_register', methods=['POST'])
+@login_required
 def delete_one():
   try:
     data = {'results': [] }
@@ -310,7 +314,6 @@ def delete_one():
   except Exception as e:
     return not_found(e)
 
-
 @dashboard.route('/get_status_code', methods=["GET"])
 def get_code():
   try:
@@ -333,12 +336,13 @@ def get_code():
 #   except Exception as e:
 #     return not_found(e)
 
-
 @dashboard.route('/get_list_autocomplete', methods=["GET"])
+@login_required
 def get_list_autocomplete():
   try:
+    user = get_user()
     list_autocomplete = {'list': []}
-    registers_list = list(db.collection_registers.find({}))
+    registers_list = list(db.collection_registers.find({'user.email': user['email']}))
 
     if len(registers_list) > 0:
       df = pd.read_json(dumps(registers_list))
@@ -351,13 +355,14 @@ def get_list_autocomplete():
   except Exception as e:
     return not_found(e)
 
-
 @dashboard.route('/search', methods=["GET"])
+@login_required
 def search():
   try:
+    user = get_user()
     list_search = {}
     search = request.args.get('search', default='', type=str)
-    registers_list = list(db.collection_registers.find({'description':search}))
+    registers_list = list(db.collection_registers.find({'user.email':user['email'],'description':search}))
 
     list_search['search'] = registers_list
     
@@ -367,7 +372,6 @@ def search():
     return response
   except Exception as e:
     return not_found(e)
-
 
 @dashboard.errorhandler(500)
 def not_found(e=None):
