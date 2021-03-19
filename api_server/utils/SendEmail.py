@@ -16,9 +16,6 @@ class SendEmail(object):
     # server = smtplib.SMTP('smtp.gamail.com:587')
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()
-    # server.login('apprendafixa@rendafixa.rocks', '281178')
-    # server.login('roberto.rosa7@gmail.com', 'Tnzro&ilyvigl2602')
-    server.login('kakashi.kisura7@gmail.com', 'Tnzro&ilyvigl2602')
     server.sendmail(message['From'], message['To'], msg_full)
     server.quit()
 
