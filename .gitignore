@@ -1,0 +1,17 @@
+.venv
+.env
+.idea
+.virtenv
+data
+data/*
+data/files
+data/images
+data/balancos
+MP_Data
+Logs
+Tensorflow*
+venv
+files
+images
+/data/*
+databases/

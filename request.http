@@ -1,0 +1,8 @@
+@host = http://localhost:3000
+
+
+GET {{host}}/ HTTP/1.1
+###
+GET {{host}}/naive_bayes_risco_credito HTTP/1.1
+###
+GET {{host}}/home2 HTTP/1.1

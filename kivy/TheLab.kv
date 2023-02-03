@@ -1,0 +1,87 @@
+#:kivy 1.0
+#MainWidget
+#BoxLayoutExample:
+# AnchorLayoutExample:
+GridLayoutExample:
+
+<GridLayoutExample@GridLayout>:
+  # rows
+  # cols
+  # cols: 3
+  rows: 2
+  Button:
+    text: 'A'
+    size_hint: None, 1
+    width: '60dp'
+  Button:
+    text: 'B'
+  Button:
+    text: 'C'
+  Button:
+    text: 'D'
+    size_hint: None, 1
+    width: '60dp'
+
+
+
+<AnchorLayoutExample>:
+  anchor_x: "center" # right, left, center
+  anchor_y: 'top'  # bottom, top, center
+
+  BoxLayout:
+    size_hint: .4, .1
+    Button:
+      text:'A'
+    Button:
+      text:'B'
+
+
+<BoxLayoutExample>:
+  orientation: 'vertical'
+  Button:
+    text: "A"
+    size_hint: 1, None
+    height: '80dp'
+    pos_hint: {'center_y': 1}
+  BoxLayout:
+    orientation: 'horizontal'
+    Button:
+      text: "B1"
+      size: "150dp", "40dp"
+      size_hint: None, None
+    Button:
+      text: "B2"
+      size: "150dp", "40dp"
+      size_hint: None, None
+    Button:
+      text: "B3"
+      size: "150dp", "40dp"
+      size_hint: None, None
+  Button:
+    text: 'C'
+    width: "100dp"
+    height: '80dp'
+    size_hint: None, None
+  Button:
+    text: 'D'
+    size_hint: .5, None
+    height: '80dp'
+    # x, center_x, top
+    # y, center_y, right
+    pos_hint: {'x': .5}
+  
+
+
+<MainWidget>:
+  Button:
+    text: "hello"
+    size: "100dp", "80dp"
+    pos: "100dp", "200dp"
+    color: 0,0,1,1
+  Label:
+    id: "label1"
+    text: "Label"
+    size: "100dp", "20dp"
+    pos: "200dp", "300dp"
+    color: 1, 0, 0, 1 # rgba
+  
