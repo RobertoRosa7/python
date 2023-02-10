@@ -33,3 +33,29 @@
 | Alto </br>6/14                | 1/6 | 2/6          | 3/6  | 4/6  | 2/6   | 6/6     | 0        | 3/6     | 2/6                 | 1/6     |
 | Moderado </br>3/14            | 1/3 | 1/3          | 1/3  | 1/3  | 2/3   | 2/3     | 1/3      | 0       | 2/3                 | 1/3     |
 | Baixo </br>5/15               | 3/5 | 2/5          | 0    | 2/5  | 3/5   | 3/5     | 2/5      | 0       | 0                   | 5/5     |
+
+## Calcular a probabilidade de risco
+
+```json
+client {
+ "historia": "Boa",
+ "divida": "Alta",
+ "garantia": "Nenhuma",
+ "renda": ">= 35"
+}
+```
+
+$$ P(alto) = 6/14\cdot1/6\cdot4/6\cdot6/6\cdot1/6 $$
+$$ P(alto) = 0.0079 $$
+$$ P(moderado) = 3/14\cdot1/3\cdot1/3\cdot2/3\cdot1/3 $$
+$$ P(moderado) = 0.0052 $$
+$$ P(baixo) = 5/14\cdot3/5\cdot2/5\cdot3/5\cdot5/5 $$
+$$ P(baixo) = 0.0514 $$
+
+Soma dos valores para achar uma porcentagem
+$$ 0.0079+0.0052+0.0514 = 0.0645 $$
+
+Porcentagem de cada risco
+$$ P(alto) = 0.0079/0.0645\cdot100 = 12.24\% $$
+$$ P(moderado) = 0.0052/0.0645\cdot100 = 8.06\% $$
+$$ P(baixo) = 0.0514/0.0645\cdot100 = 79.68\% $$
