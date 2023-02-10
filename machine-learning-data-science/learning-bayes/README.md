@@ -46,10 +46,15 @@ client {
 ```
 
 $$ P(alto) = 6/14\cdot1/6\cdot4/6\cdot6/6\cdot1/6 $$
+
 $$ P(alto) = 0.0079 $$
+
 $$ P(moderado) = 3/14\cdot1/3\cdot1/3\cdot2/3\cdot1/3 $$
+
 $$ P(moderado) = 0.0052 $$
+
 $$ P(baixo) = 5/14\cdot3/5\cdot2/5\cdot3/5\cdot5/5 $$
+
 $$ P(baixo) = 0.0514 $$
 
 Soma dos valores para achar uma porcentagem
