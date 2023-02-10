@@ -37,12 +37,13 @@
 ## Calcular a probabilidade de risco
 
 ```json
-client {
+"client": {
  "historia": "Boa",
  "divida": "Alta",
  "garantia": "Nenhuma",
  "renda": ">= 35"
 }
+
 ```
 
 $$ P(alto) = (6\div14)\cdot(1\div6)\cdot(4\div6)\cdot(6\div6)\cdot(1\div6) $$
