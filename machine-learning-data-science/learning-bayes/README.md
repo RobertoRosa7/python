@@ -45,15 +45,15 @@ client {
 }
 ```
 
-$$ P(alto) = 6/14\cdot1/6\cdot4/6\cdot6/6\cdot1/6 $$
+$$ P(alto) = (6\div14)\cdot(1\div6)\cdot(4\div6)\cdot(6\div6)\cdot(1\div6) $$
 
 $$ P(alto) = 0.0079 $$
 
-$$ P(moderado) = 3/14\cdot1/3\cdot1/3\cdot2/3\cdot1/3 $$
+$$ P(moderado) = (3\div14)\cdot(1\div3)\cdot(1\div3)\cdot(2\div3)\cdot(1\div3) $$
 
 $$ P(moderado) = 0.0052 $$
 
-$$ P(baixo) = 5/14\cdot3/5\cdot2/5\cdot3/5\cdot5/5 $$
+$$ P(baixo) = (5\div14)\cdot(3\div5)\cdot(2\div5)\cdot(3\div5)\cdot(5\div5) $$
 
 $$ P(baixo) = 0.0514 $$
 
@@ -63,8 +63,8 @@ $$ 0.0079+0.0052+0.0514 = 0.0645 $$
 
 Porcentagem de cada risco
 
-$$ P(alto) = 0.0079/0.0645\cdot100 = 12.24\% $$
+$$ P(alto) = 0.0079\div0.0645\cdot100 = 12.24\% $$
 
-$$ P(moderado) = 0.0052/0.0645\cdot100 = 8.06\% $$
+$$ P(moderado) = 0.0052\div0.0645\cdot100 = 8.06\% $$
 
-$$ P(baixo) = 0.0514/0.0645\cdot100 = 79.68\% $$
+$$ P(baixo) = 0.0514\div0.0645\cdot100 = 79.68\% $$
