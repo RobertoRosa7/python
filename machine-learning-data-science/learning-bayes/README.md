@@ -58,9 +58,13 @@ $$ P(baixo) = 5/14\cdot3/5\cdot2/5\cdot3/5\cdot5/5 $$
 $$ P(baixo) = 0.0514 $$
 
 Soma dos valores para achar uma porcentagem
+
 $$ 0.0079+0.0052+0.0514 = 0.0645 $$
 
 Porcentagem de cada risco
+
 $$ P(alto) = 0.0079/0.0645\cdot100 = 12.24\% $$
+
 $$ P(moderado) = 0.0052/0.0645\cdot100 = 8.06\% $$
+
 $$ P(baixo) = 0.0514/0.0645\cdot100 = 79.68\% $$
