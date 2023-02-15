@@ -25,7 +25,7 @@
 | Boa                 | Alta   | Nenhuma   | < 35.00             | `Baixo`    |
 | Ruim                | Alta   | Nenhuma   | >= 15.00 a <= 35.00 | `Alto`     |
 
-## Naive Bayes
+## Naive Bayes - Teorema de Bayes
 
 |                               | Boa   | Desconhecida | Ruim | Alta  | Baixo | Nenhuma | Adequada | < 15.00 | >= 15.00 a <= 35.00 | > 35.00 |
 | ----------------------------- | ----- | ------------ | ---- | ----- | ----- | ------- | -------- | ------- | ------------------- | ------- |
