@@ -15,7 +15,9 @@ venv
 files
 images
 /py_data/*
+*/py_data/
 py_databases/
+*/py_databases
 .h5
 .dat
 */file-pkl
