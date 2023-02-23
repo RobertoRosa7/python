@@ -9,6 +9,7 @@ XPATH_ROWS = '//*[@id="ctl50_g_cf05b8d5_fd75_46b5_bdfa_a623e654362c"]/div/div/ta
 X_PATH_THEAD = '//*[@id="ctl50_g_cf05b8d5_fd75_46b5_bdfa_a623e654362c"]/div/div/table/thead'
 X_PATH_THEAD_TR = '//*[@id="ctl50_g_cf05b8d5_fd75_46b5_bdfa_a623e654362c"]/div/div/table/thead/tr'
 FILE_NAME = 'assets/original-data.csv'
+ # https://servicebus2.caixa.gov.br/portaldeloterias/api/resultados?modalidade=Mega-Sena
 
 remove_dot = re.compile(r'\.')
 remove_dollar = re.compile(r'^[R]\$')

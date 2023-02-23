@@ -1,6 +1,6 @@
 from selenium.webdriver.remote.webelement import WebElement
-from py_mega_sena.services.csv.csv_service import CsvService
-from py_mega_sena.services.selenium.selenium_mega_service import SeleniumMegaService
+from services.csv.csv_service import CsvService
+from services.selenium.selenium_mega_service import SeleniumMegaService
 
 
 def run() -> None:
