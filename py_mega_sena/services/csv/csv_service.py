@@ -14,6 +14,10 @@ class CsvService:
     def get_path(self, filename) -> str:
         return os.path.join(self.base_file, filename)
 
+    def get_files(self, filename: str) -> list[str]:
+        with open(self.get_path(filename), mode='r', encoding='utf-8') as file_reader:
+            return list(csv.reader(file_reader, delimiter=';'))
+
     def save_csv_headers(self, filename, data) -> None:
         with open(self.get_path(filename), mode='w', encoding="utf-8") as f:
             writer = csv.writer(f, delimiter=';')
